@@ -1,0 +1,121 @@
+h2 {
+	background: #2A587F;
+	color: #fff;
+	padding: 20px;
+	margin: 0;
+	box-shadow: inset 0px 0px 52px #1C4569;
+}
+h2 small {
+	color: #DDDDDD;
+	text-transform: uppercase;
+	float: right;
+}
+h2 a {
+	color: #fff;
+}
+h2 a:hover {
+	color: #fff;
+}
+h3 {
+	margin-top: 0;
+}
+.navbar {
+	border-radius: 0;
+}
+.input-small {
+	width: 20px;
+}
+label {
+	display: inline-block;
+}
+.form-control {
+	display: inline-block;
+}
+.moduleOptions li, .indModuleOptions li {
+	margin-bottom: 5px;
+}
+.well {
+	overflow: hidden;
+}
+.btn-group {
+	margin-right: 10px;
+}
+#moduleList .list-group-item:nth-child(even) {
+	background-color: #f7f7f9;
+}
+#themeSelect {
+	margin-bottom: 20px;
+	overflow: hidden;
+}
+#themeList li {
+	float:left;
+	margin: 1px;
+}
+#themeList a.template {
+	padding: 2px;
+	width: 136px;
+	line-height: 64px;
+	position: relative;
+}
+#themeList a.template img{
+	position: relative;
+}
+#themeList .dimensions {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	left: 0;
+	line-height: 20px;
+	background: rgba(255, 255, 255, 0.8);
+}
+#themeList .btn-default .dimensions{
+	display: none;
+}
+#themeList .btn-default:hover .dimensions{
+	display: block;
+}
+#themeList .btn-danger {
+	background: #D2B0AF;
+	border-color: #D2B0AF;
+}
+#themeList .btn-danger .dimensions{
+	display: block;
+	background: #D2B0AF;
+	color: #000;
+	font-weight: bold;
+}
+#themeList .fa-ban {
+	position: absolute;
+	left: 0;
+	top: 8px;
+	font-size: 40px;
+	width: 100%;
+	color: #a94442;
+}
+#themeList a.ratio {
+	width: 67px;
+	line-height: 8px;
+}
+#imageWrapper {
+	margin: 10px 20px 10px 0;
+	float:left;
+}
+.patternLabel {
+	width: 140px;
+}
+#sizeRestriction {
+	font-style: italic;
+	margin-left: 20px;
+}
+.template img {
+	max-width: 130px;
+	max-height: 60px;
+}
+@media screen and (max-width: 990px) {
+	.imageFields {
+		clear: both;
+	}
+}

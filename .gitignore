@@ -1,5 +1,18 @@
+<<<<<<< HEAD
 config.php
 js/tools_variables.js
 wizard/lti-config.xml
 
 
+=======
+
+config.php
+
+js/tools_variables.js
+
+wizard/ltiCode.xml
+
+css/development.css
+
+wizard/devWizardLTI.xml
+>>>>>>> e688744238125e00ce74d56b25b37a89fc0d558c
