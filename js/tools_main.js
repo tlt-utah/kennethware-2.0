@@ -266,6 +266,17 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             e.preventDefault();
             tinyMCE.DOM.addClass(tinyMCE.activeEditor.selection.getNode(), "kl_unwrap_me");
             $(iframeID).contents().find('.kl_unwrap_me').contents().unwrap();
+            $('.kl_current_node_title').html('&lt;' + tinymce.activeEditor.selection.getNode().nodeName + '&gt;');
+        });
+        $('.kl_delete_node').unbind("click").click(function (e) {
+            e.preventDefault();
+            tinyMCE.DOM.addClass(tinyMCE.activeEditor.selection.getNode(), "kl_delete_me");
+            $(iframeID).contents().find('.kl_delete_me').remove();
+        });        
+        // Adjust node title when the node changes
+        $('.kl_current_node_title').html('&lt;' + tinymce.activeEditor.selection.getNode().nodeName + '&gt;');
+        tinyMCE.activeEditor.onNodeChange.add(function () {
+            $('.kl_current_node_title').html('&lt;' + tinymce.activeEditor.selection.getNode().nodeName + '&gt;');
         });
     }
     // Clear out the blank span added when the template wrapper is first created
@@ -335,6 +346,42 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             }
         });
     }
+    ////// Supporting functions  //////
+    function klInitializeElementColorPicker(inputName, attribute) {
+        var chosenColor = '',
+            startingColor = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), attribute, true),
+            bgHex,
+            textColor;
+        $(inputName).spectrum({
+            color: startingColor,
+            showAlpha: true,
+            preferredFormat: 'hex',
+            showPaletteOnly: true,
+            togglePaletteOnly: true,
+            showInput: true,
+            palette: klToolsVariables.klThemeColors,
+            allowEmpty: true,
+            replacerClassName: 'spectrum_trigger',
+            containerClassName: 'spectrum_picker',
+            cancelText: 'Close',
+            localStorageKey: 'spectrum.wiki',
+            move: function (tinycolor) {
+                $(inputName).val(tinycolor);
+                chosenColor = $(inputName).val();
+                // $(iframeID).contents().find(targetElement).css(attribute, chosenColor);
+                tinyMCE.DOM.setStyle(tinymce.activeEditor.selection.getNode(), attribute, chosenColor);
+                if (attribute === 'background-color') {
+                    bgHex = chosenColor.replace('#', '');
+                    textColor = getContrastYIQ(bgHex);
+                    // $(iframeID).contents().find(targetElement).css('color', textColor);
+                    tinyMCE.DOM.setStyle(tinymce.activeEditor.selection.getNode(), 'color', textColor);
+                }
+                tinyMCE.DOM.setAttrib(tinymce.activeEditor.selection.getNode(), 'data-mce-style', '');
+                // $(iframeID).contents().find(targetElement).removeAttr('data-mce-style');
+            }
+        });
+    }
+
 
     function klAddSectionControls(title, connectedSectionID) {
         var newSectionControls = '<li rel="#' + connectedSectionID + '" class="' + connectedSectionID + '_section"><span title="Drag to reorder" class="move_item_link"><img alt="Move" src="/images/move.png?1366214258"></span>&nbsp;' +
@@ -759,7 +806,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
         });
         $('.kl_add_subtitle').unbind("click").click(function (e) {
             e.preventDefault();
-            $(iframeID).contents().find('#kl_banner_right').append('<span class="kl_subtitle">Page Subtitle</span>');
+            $(iframeID).contents().find('#kl_banner_right').append('<span class="kl_subtitle">Subtitle</span>');
             $('.kl_add_subtitle').hide();
             $('.kl_remove_subtitle').show();
         });
@@ -1676,6 +1723,24 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
         tinyMCE.DOM.removeClass(parentElement, 'pad-box-mini');
         tinyMCE.DOM.removeClass(parentElement, 'pad-box-micro');
     }
+    function klChangeBorderStyle(style, direction) {
+        var kl_spacing_val;
+        if (direction === 'all') {
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-top-style', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-right-style', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-bottom-style', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-left-style', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-style', style);
+        } else {
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-' + direction + '-style', style);
+        }
+        // Remove data-mce-style
+        tinyMCE.DOM.setAttrib(tinymce.activeEditor.selection.getNode(), 'data-mce-style', '');
+    }
+    function klChangeAllBorders(type) {
+        var kl_border_style = $('#kl_border_style_all option:selected').val();
+        tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-style', kl_border_style);
+    }
     function klChangeSpacing(type, direction) {
         var kl_spacing_val = $('#kl_' + type + '_input_' + direction).val();
         if ($('#kl_' + type + '_input_' + direction).val() !== '') {
@@ -1683,7 +1748,13 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
         } else if ($('#kl_' + type + '_input_all').val() !== '') {
             kl_spacing_val = $('#kl_' + type + '_input_all').val() + 'px';
         }
-        tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), type + '-' + direction, kl_spacing_val);
+        if (type === 'border') {
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), type + '-' + direction + '-width', kl_spacing_val);
+        } else {
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), type + '-' + direction, kl_spacing_val);
+        }
+        // Remove data-mce-style
+        tinyMCE.DOM.setAttrib(tinymce.activeEditor.selection.getNode(), 'data-mce-style', '');
     }
     function klChangeAllSpacing(type) {
         klChangeSpacing(type, 'top');
@@ -1694,24 +1765,66 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
     function klClearSpacingInput(type) {
         $('#kl_' + type + '_input_all').attr('placeholder', '#').val('');
         $('#kl_' + type + '_input_top').attr('placeholder', '#').val('');
+        $('#kl_' + type + '_input_right').attr('placeholder', '#').val('');
         $('#kl_' + type + '_input_bottom').attr('placeholder', '#').val('');
         $('#kl_' + type + '_input_left').attr('placeholder', '#').val('');
-        $('#kl_' + type + '_input_right').attr('placeholder', '#').val('');
     }
     function klCurrentSpacing(type) {
+        console.log('klCurrentSpacing');
         var kl_spacing_top = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), type + '-top', true),
+            kl_spacing_right = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), type + '-right', true),
             kl_spacing_bottom = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), type + '-bottom', true),
             kl_spacing_left = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), type + '-left', true),
-            kl_spacing_right = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), type + '-right', true),
             kl_spacing_display_top = kl_spacing_top.replace('px', ''),
+            kl_spacing_display_right = kl_spacing_right.replace('px', ''),
             kl_spacing_display_bottom = kl_spacing_bottom.replace('px', ''),
-            kl_spacing_display_left = kl_spacing_left.replace('px', ''),
-            kl_spacing_display_right = kl_spacing_right.replace('px', '');
-        $('#kl_' + type + '_input_all').attr('placeholder', '#').val('');
+            kl_spacing_display_left = kl_spacing_left.replace('px', '');
+        // $('#kl_' + type + '_input_all').attr('placeholder', '#').val('');
         $('#kl_' + type + '_input_top').attr('placeholder', kl_spacing_display_top).val('');
         $('#kl_' + type + '_input_bottom').attr('placeholder', kl_spacing_display_bottom).val('');
         $('#kl_' + type + '_input_left').attr('placeholder', kl_spacing_display_left).val('');
         $('#kl_' + type + '_input_right').attr('placeholder', kl_spacing_display_right).val('');
+    }
+    function klCurrentBorder() {
+        console.log('klCurrentBorder');
+        var kl_border_top = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), 'border-top-width', true),
+            kl_border_right = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), 'border-right-width', true),
+            kl_border_bottom = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), 'border-bottom-width', true),
+            kl_border_left = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), 'border-left-width', true),
+            kl_border_display_top = kl_border_top.replace('px', ''),
+            kl_border_display_right = kl_border_right.replace('px', ''),
+            kl_border_display_bottom = kl_border_bottom.replace('px', ''),
+            kl_border_display_left = kl_border_left.replace('px', ''),
+            kl_border_style = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), 'border-style', true),
+            kl_border_style_top = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), 'border-top-style', true),
+            kl_border_style_right = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), 'border-right-style', true),
+            kl_border_style_bottom = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), 'border-bottom-style', true),
+            kl_border_style_left = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), 'border-left-style', true);
+        // $('#kl_' + type + '_input_all').attr('placeholder', '#').val('');
+        $('#kl_border_input_top').attr('placeholder', kl_border_display_top).val('');
+        $('#kl_border_input_bottom').attr('placeholder', kl_border_display_bottom).val('');
+        $('#kl_border_input_left').attr('placeholder', kl_border_display_left).val('');
+        $('#kl_border_input_right').attr('placeholder', kl_border_display_right).val('');
+        $('#kl_border_style_all').val(kl_border_style);
+        $('#kl_border_style_top').val(kl_border_style_top);
+        $('#kl_border_style_right').val(kl_border_style_right);
+        $('#kl_border_style_bottom').val(kl_border_style_bottom);
+        $('#kl_border_style_left').val(kl_border_style_left);
+        klInitializeElementColorPicker('#kl_border_color_all', 'border-color');
+        klInitializeElementColorPicker('#kl_border_color_top', 'border-top-color');
+        klInitializeElementColorPicker('#kl_border_color_right', 'border-right-color');
+        klInitializeElementColorPicker('#kl_border_color_bottom', 'border-bottom-color');
+        klInitializeElementColorPicker('#kl_border_color_left', 'border-left-color');
+    }
+    function klSetBorderValue(direction) {
+        var kl_border_val = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), 'border-' + direction + '-width', true),
+            kl_border_display_val = kl_border_val.replace('px', '');
+        $('#kl_border_input_' + direction).val(kl_border_display_val);
+    }
+    function klSetSpacingValue(type, direction) {
+        var kl_spacing_val = tinyMCE.DOM.getStyle(tinyMCE.activeEditor.selection.getNode(), type + '-' + direction, true),
+            kl_spacing_display_val = kl_spacing_val.replace('px', '');
+        $('#kl_' + type + '_input_' + direction).val(kl_spacing_display_val);
     }
     function klDefaultSpacing(type) {
         tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), type, '');
@@ -1724,21 +1837,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
     ////// On Ready/Click functions  //////
     function klBordersAndSpacingReady() {
         var myClass, elementType, parentElement;
-        $('.kl_border_apply a').unbind("click").click(function (e) {
-            e.preventDefault();
-            $('.kl_border_apply a').each(function () {
-                $(this).removeClass('active');
-            });
-            $(this).addClass('active');
-        });
-        $('.kl_custom_borders').unbind("click").click(function (e) {
-            e.preventDefault();
-            myClass = $(this).attr('rel');
-            elementType = $('.kl_border_apply a.active').attr('rel');
-            parentElement = tinyMCE.activeEditor.dom.getParent(tinyMCE.activeEditor.selection.getNode(), elementType);
-            klRemoveBorders(parentElement);
-            tinyMCE.DOM.addClass(parentElement, myClass);
-        });
+        // BORDERS
         $('.kl_custom_border_radius').unbind("click").click(function (e) {
             e.preventDefault();
             myClass = $(this).attr('rel');
@@ -1747,96 +1846,106 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             klRemoveBorderRadius(parentElement);
             tinyMCE.DOM.addClass(parentElement, myClass);
         });
-        $('.kl_custom_padding').unbind("click").click(function (e) {
-            e.preventDefault();
-            myClass = $(this).attr('rel');
-            elementType = $('.kl_border_apply a.active').attr('rel');
-            parentElement = tinyMCE.activeEditor.dom.getParent(tinyMCE.activeEditor.selection.getNode(), elementType);
-            klRemovePadding(parentElement);
-            tinyMCE.DOM.addClass(parentElement, myClass);
+        $('.kl_borders').each(function () {
+            var direction = $(this).attr('rel');
+            $('#kl_border_input_' + direction).keyup(function () {
+                klChangeSpacing('border', direction);
+            });
+            $('#kl_border_input_' + direction).change(function () {
+                klChangeSpacing('border', direction);
+            });
+            $('#kl_border_input_' + direction).focus(function () {
+                klSetBorderValue(direction);
+            });
+            $('#kl_border_style_' + direction).change(function () {
+                var kl_border_style = this.value;
+                klChangeBorderStyle(kl_border_style, direction);
+                klCurrentBorder();
+            });
         });
-        $('#kl_margins_apply').click(function (e) {
-            e.preventDefault();
-            klChangeAllSpacing('margin');
+        $('#kl_border_input_all').keyup(function () {
+            klChangeAllSpacing('border');
+            klCurrentBorder();
         });
-        // $('#kl_margins_current').click(function (e) {
-        //     e.preventDefault();
-        //     klCurrentSpacing('margin');
-        // });
-        $('#kl_margins_clear').click(function (e) {
-            e.preventDefault();
-            klClearSpacingInput('margin');
+        $('#kl_border_input_all').change(function () {
+            klChangeAllSpacing('border');
+            klCurrentBorder();
         });
+        $('#kl_border_style_all').change(function () {
+            var kl_border_style = $('#kl_border_style_all option:selected').val();
+            klChangeBorderStyle(kl_border_style, 'all');
+            klCurrentBorder();
+        });
+        $('.kl_border_color').change(function () {
+            klCurrentBorder();
+        });
+        $('#kl_borders_default').unbind("click").click(function (e) {
+            e.preventDefault();
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-style', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-top-style', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-right-style', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-bottom-style', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-left-style', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-width', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-top-width', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-right-width', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-bottom-width', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-left-width', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-color', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-top-color', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-right-color', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-bottom-color', '');
+            tinyMCE.DOM.setStyle(tinyMCE.activeEditor.selection.getNode(), 'border-left-color', '');
+            klCurrentBorder();
+            $('#kl_border_input_all').val('');
+        });
+        klInitializeElementColorPicker('#kl_border_color_all', 'border-color');
+        klInitializeElementColorPicker('#kl_border_color_top', 'border-top-color');
+        klInitializeElementColorPicker('#kl_border_color_right', 'border-right-color');
+        klInitializeElementColorPicker('#kl_border_color_bottom', 'border-bottom-color');
+        klInitializeElementColorPicker('#kl_border_color_left', 'border-left-color');
+
+        // MARGINS
         $('#kl_margins_default').click(function (e) {
             e.preventDefault();
             klDefaultSpacing('margin');
+            klCurrentSpacing('margin');
+            $('#kl_margin_input_all').val('');
         });
         $('.kl_margins').each(function () {
             var direction = $(this).attr('rel');
-            $('#kl_add_margin_' + direction).unbind("click").click(function (e) {
-                e.preventDefault();
+            $('#kl_margin_input_' + direction).keyup(function () {
                 klChangeSpacing('margin', direction);
             });
-            $('#kl_margin_input_' + direction).keydown(function (event) {
-                if (event.keyCode === 13) {
-                    event.preventDefault();
-                    klChangeSpacing('margin', direction);
-                    return false;
-                }
+            $('#kl_margin_input_' + direction).focus(function () {
+                klSetSpacingValue('margin', direction);
             });
         });
-        $('#kl_add_margin_all').unbind("click").click(function (e) {
-            e.preventDefault();
+        $('#kl_margin_input_all').keyup(function () {
             klChangeAllSpacing('margin');
+            klCurrentSpacing('margin');
         });
-        $('#kl_margin_input_all').keydown(function (event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-                klChangeAllSpacing('margin');
-                return false;
-            }
-        });
-        $('#kl_padding_apply').click(function (e) {
-            e.preventDefault();
-            klChangeAllSpacing('padding');
-        });
-        // $('#kl_padding_current').click(function (e) {
-        //     e.preventDefault();
-        //     klCurrentSpacing('padding');
-        // });
-        $('#kl_padding_clear').click(function (e) {
-            e.preventDefault();
-            klClearSpacingInput('padding');
-        });
+        // PADDING
         $('#kl_padding_default').click(function (e) {
             e.preventDefault();
             klDefaultSpacing('padding');
+            klCurrentSpacing('padding');
+            $('#kl_padding_input_all').val('');
         });
         $('.kl_padding').each(function () {
             var direction = $(this).attr('rel');
-            $('#kl_add_padding_' + direction).unbind("click").click(function (e) {
-                e.preventDefault();
+            $('#kl_padding_input_' + direction).keyup(function () {
                 klChangeSpacing('padding', direction);
             });
-            $('#kl_padding_input_' + direction).keydown(function (event) {
-                if (event.keyCode === 13) {
-                    event.preventDefault();
-                    klChangeSpacing('padding', direction);
-                    return false;
-                }
+            $('#kl_padding_input_' + direction).focus(function () {
+                klSetSpacingValue('padding', direction);
             });
         });
-        $('#kl_add_padding_all').unbind("click").click(function (e) {
-            e.preventDefault();
+        $('#kl_padding_input_all').keyup(function () {
             klChangeAllSpacing('padding');
+            klCurrentSpacing('padding');
         });
-        $('#kl_padding_input_all').keydown(function (event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-                klChangeAllSpacing('padding');
-                return false;
-            }
-        });
+        // SECTION TOGGLE
         $('.kl_borders_spacing_tabs a').click(function (e) {
             e.preventDefault();
             var connectedElement = $(this).attr('rel');
@@ -1845,9 +1954,14 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             $('.kl_border_spacing_section').hide();
             $('#' + connectedElement).show();
         });
+        // Identify when TinyMCE node changes
         tinyMCE.activeEditor.onNodeChange.add(function () {
             klCurrentSpacing('margin');
             klCurrentSpacing('padding');
+            klCurrentBorder();
+            $('#kl_border_input_all').val('');
+            $('#kl_margin_input_all').val('');
+            $('#kl_padding_input_all').val('');
         });
     }
 
@@ -1875,23 +1989,89 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             '</h3>' +
             '<div class="kl_borders_spacing">' +
             '   <div class="btn-group kl_borders_spacing_tabs kl_margin_bottom">' +
-            '        <a href="#" class="btn btn-small" rel="kl_borders">Borders</a>' +
+            '        <a href="#" class="btn btn-small active" rel="kl_borders">Borders</a>' +
             '        <a href="#" class="btn btn-small" rel="kl_padding">Padding</a>' +
-            '        <a href="#" class="btn btn-small active" rel="kl_margins">Margins</a>' +
+            '        <a href="#" class="btn btn-small" rel="kl_margins">Margins</a>' +
             '   </div>' +
             '   <div class="kl_margin_top">' +
-            '       <div id="kl_borders" class="kl_border_spacing_section" style="display:none;">' +
-            '           <div class="btn-group-label kl_margin_bottom"><span>Borders:</span>' +
-            '               <div class="btn-group">' +
-            '                   <a href="#" class="btn btn-mini kl_custom_borders" rel="border border-trbl" data-tooltip="top" title="Full Borders"><span class="border border-trbl">&nbsp; &nbsp; &nbsp; </span></a>' +
-            '                   <a href="#" class="btn btn-mini kl_custom_borders" rel="border border-rbl" data-tooltip="top" title="Right, Bottom and Left Borders"><span class="border border-rbl">&nbsp; &nbsp; &nbsp; </span></a>' +
-            '                   <a href="#" class="btn btn-mini kl_custom_borders" rel="border border-tbl" data-tooltip="top" title="Top, Bottom, and Left Borders"><span class="border border-tbl">&nbsp; &nbsp; &nbsp; </span></a>' +
-            '                   <a href="#" class="btn btn-mini kl_custom_borders" rel="border border-tl" data-tooltip="top" title="Top and Left Borders"><span class="border border-tl">&nbsp; &nbsp; &nbsp; </span></a>' +
-            '                   <a href="#" class="btn btn-mini kl_custom_borders" rel="border border-b" data-tooltip="top" title="Bottom Border"><span class="border border-b">&nbsp; &nbsp; &nbsp; </span></a>' +
-            '                   <a href="#" class="btn btn-mini kl_custom_borders" rel="border border-t" data-tooltip="top" title="Top Border"><span class="border border-t">&nbsp; &nbsp; &nbsp; </span></a>' +
-            '                   <a href="#" class="btn btn-mini kl_remove icon-end kl_custom_borders" rel="" data-tooltip="top" title="Remove borders from selected paragraph or heading.">&nbsp;</a>' +
-            '               </div>' +
+            '       <div id="kl_borders" class="kl_border_spacing_section">' +
+            '           <h4>Selected <span class="kl_current_node_title"></span> Borders:</h4>' +
+            '           <div class="kl_floated_inputs">' +
+            '              <label for="kl_border_input_all" class="screenreader-only">All Borders Width</label>' +
+            '              <input id="kl_border_input_all" class="kl_borders_all kl_input_small" type="number" placeholder="#">' +
+            '              <label for="kl_border_style_all" class="screenreader-only">All Borders Style</label>' +
+            '              <select id="kl_border_style_all">' +
+            '                  <option value="">Default</option>' +
+            '                  <option value="none">None</option>' +
+            '                  <option value="dotted">Dotted</option>' +
+            '                  <option value="dashed">Dashed</option>' +
+            '                  <option value="solid" selected>Solid</option>' +
+            '                  <option value="double">Double</option>' +
+            '              </select>' +
+            '              <input id="kl_border_color_all" class="kl_border_color" type="text">' +
+            '              <label for="kl_border_color_all">All <span class="screenreader-only">Borders Color</span></label>' +
+            '           </div><hr>' +
+            '           <div class="kl_floated_inputs">' +
+            '              <label for="kl_border_input_top" class="screenreader-only">Top Border Width</label>' +
+            '              <input id="kl_border_input_top" rel="top" class="kl_borders kl_input_small" type="number" placeholder="#">' +
+            '              <label for="kl_border_style_top" class="screenreader-only">Top Border Style</label>' +
+            '              <select id="kl_border_style_top">' +
+            '                  <option value="">Default</option>' +
+            '                  <option value="none">None</option>' +
+            '                  <option value="dotted">Dotted</option>' +
+            '                  <option value="dashed">Dashed</option>' +
+            '                  <option value="solid" selected>Solid</option>' +
+            '                  <option value="double">Double</option>' +
+            '              </select>' +
+            '              <input id="kl_border_color_top" class="kl_border_color" type="text">' +
+            '              <label for="kl_border_color_top">Top <span class="screenreader-only">Border Color</span></label>' +
             '           </div>' +
+            '           <div class="kl_floated_inputs">' +
+            '              <label for="kl_border_input_right" class="screenreader-only">Right Border Width</label>' +
+            '              <input id="kl_border_input_right" rel="right" class="kl_borders kl_input_small" type="number" placeholder="#">' +
+            '              <label for="kl_border_style_right" class="screenreader-only">Right Border Style</label>' +
+            '              <select id="kl_border_style_right">' +
+            '                  <option value="">Default</option>' +
+            '                  <option value="none">None</option>' +
+            '                  <option value="dotted">Dotted</option>' +
+            '                  <option value="dashed">Dashed</option>' +
+            '                  <option value="solid" selected>Solid</option>' +
+            '                  <option value="double">Double</option>' +
+            '              </select>' +
+            '              <input id="kl_border_color_right" class="kl_border_color" type="text">' +
+            '              <label for="kl_border_color_right">Right <span class="screenreader-only">Border Color</span></label>' +
+            '           </div>' +
+            '           <div class="kl_floated_inputs">' +
+            '              <label for="kl_border_input_bottom" class="screenreader-only">Bottom Border Width</label>' +
+            '              <input id="kl_border_input_bottom" rel="bottom" class="kl_borders kl_input_small" type="number" placeholder="#">' +
+            '              <label for="kl_border_style_bottom" class="screenreader-only">Bottom Border Style</label>' +
+            '              <select id="kl_border_style_bottom">' +
+            '                  <option value="">Default</option>' +
+            '                  <option value="none">None</option>' +
+            '                  <option value="dotted">Dotted</option>' +
+            '                  <option value="dashed">Dashed</option>' +
+            '                  <option value="solid" selected>Solid</option>' +
+            '                  <option value="double">Double</option>' +
+            '              </select>' +
+            '              <input id="kl_border_color_bottom" class="kl_border_color" type="text">' +
+            '              <label for="kl_border_color_bottom">Bottom <span class="screenreader-only">Border Color</span></label>' +
+            '           </div>' +
+            '           <div class="kl_floated_inputs">' +
+            '              <label for="kl_border_input_left" class="screenreader-only">Left Borders Width</label>' +
+            '              <input id="kl_border_input_left" rel="left" class="kl_borders kl_input_small" type="number" placeholder="#">' +
+            '              <label for="kl_border_style_left" class="screenreader-only">Left Borders Style</label>' +
+            '              <select id="kl_border_style_left">' +
+            '                  <option value="">Default</option>' +
+            '                  <option value="none">None</option>' +
+            '                  <option value="dotted">Dotted</option>' +
+            '                  <option value="dashed">Dashed</option>' +
+            '                  <option value="solid" selected>Solid</option>' +
+            '                  <option value="double">Double</option>' +
+            '              </select>' +
+            '              <input id="kl_border_color_left" class="kl_border_color" type="text">' +
+            '              <label for="kl_border_color_left">Left <span class="screenreader-only">Border Color</span></label>' +
+            '           </div>' +
+            '           <button id="kl_borders_default" class="btn btn-mini">Reset Borders to Default</button>' +
             '           <div class="btn-group-label kl_margin_bottom"><span>Border Radius:</span>' +
             '               <div class="btn-group">' +
             '                   <a href="#" class="btn btn-mini kl_custom_border_radius" rel="border-round" data-tooltip="top" title="All corners rounded"><span class="border border-trbl border-round">&nbsp; &nbsp; &nbsp; &nbsp; </span></a>' +
@@ -1903,104 +2083,36 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             '           </div>' +
             '       </div>' +
             '       <div id="kl_padding" class="kl_border_spacing_section" style="display:none;">' +
-            '           <h4>Padding:</h4>' +
-            '           <div class="btn-group">' +
-            '               <button id="kl_padding_current" class="btn btn-mini hide" data-tooltip="top" title="Populate Fields based on current element">Current</button>' +
-            '               <button id="kl_padding_apply" class="btn btn-mini" data-tooltip="top" title="Apply Entered values to current element">Apply</button>' +
-            '               <button id="kl_padding_clear" class="btn btn-mini" data-tooltip="top" title="Clear padding input fields">Clear</button>' +
-            '               <button id="kl_padding_default" class="btn btn-mini" data-tooltip="top" title="Reset current element&rsquo;s padding to default">Default</button>' +
+            '           <h4>Selected <span class="kl_current_node_title"></span> Padding:</h4>' +
+            '           <div class="btn-group-label kl_margin_top">' +
+            '               <input id="kl_padding_input_all" class="kl_padding_all kl_input_small" type="number" placeholder="#">' +
+            '               <label for="kl_padding_input_all">All Padding</label><hr>' +
+            '               <input id="kl_padding_input_top" class="kl_padding kl_input_small" type="number" rel="top" placeholder="#">' +
+            '               <label for="kl_padding_input_top">Top <span class="screenreader-only">Padding</span></label><br>' +
+            '               <input id="kl_padding_input_left" class="kl_padding kl_input_small" type="number" rel="left" placeholder="#">' +
+            '               <label for="kl_padding_input_left">Left <span class="screenreader-only">Padding</span></label><br>' +
+            '               <input id="kl_padding_input_right" class="kl_padding kl_input_small" type="number" rel="right" placeholder="#">' +
+            '               <label for="kl_padding_input_right">Right <span class="screenreader-only">Padding</span></label><br>' +
+            '               <input id="kl_padding_input_bottom" class="kl_padding kl_input_small" type="number" rel="bottom" placeholder="#">' +
+            '               <label for="kl_padding_input_bottom">Bottom <span class="screenreader-only">Padding</span></label><br>' +
             '           </div>' +
-            '           <div class="btn-group-label kl_margin_bottom kl_margin_top"><span>Identical Padding:</span><br>' +
-            '                <form class="form-inline input-append">' +
-            '                   <input id="kl_padding_input_all" class="kl_padding_all kl_input_small" type="text" placeholder="#">' +
-            '                   <a href="#" id="kl_add_padding_all" class="btn add-on" data-tooltip="top" ' +
-            '                       title="Apply padding to all sides">' +
-            '                       <i class="icon-add"></i> All' +
-            '                   </a>' +
-            '                </form>' +
-            '           </div>' +
-            '           <div class="btn-group-label kl_margin_bottom" style="clear:left;"><span>Individual Padding:</span><br>' +
-            '               <div style="text-align:center;">' +
-            '                   <div class="input-append" style="margin-bottom:3px;">' +
-            '                      <input id="kl_padding_input_top" class="kl_padding kl_input_small" type="text" rel="top" placeholder="#">' +
-            '                      <a href="#" id="kl_add_padding_top" class="btn add-on" data-tooltip="top" ' +
-            '                          title="Apply top padding to selected element">' +
-            '                          <i class="icon-add"></i> Top' +
-            '                      </a>' +
-            '                   </div>' +
-            '                   <div class="input-append" style="float:left;margin-bottom:3px;">' +
-            '                      <input id="kl_padding_input_left" class="kl_padding kl_input_small" type="text" rel="left" placeholder="#">' +
-            '                      <a href="#" id="kl_add_padding_left" class="btn add-on" data-tooltip="top" ' +
-            '                          title="Apply left padding to selected element">' +
-            '                          <i class="icon-add"></i> Left' +
-            '                      </a>' +
-            '                   </div>' +
-            '                   <div class="input-append" style="float:right;margin-bottom:3px;">' +
-            '                      <input id="kl_padding_input_right" class="kl_padding kl_input_small" type="text" rel="right" placeholder="#">' +
-            '                      <a href="#" id="kl_add_padding_right" class="btn add-on" data-tooltip="top" ' +
-            '                          title="Apply right padding to selected element">' +
-            '                          <i class="icon-add"></i> Right' +
-            '                      </a>' +
-            '                   </div>' +
-            '                   <div class="input-append" style="clear:both;">' +
-            '                      <input id="kl_padding_input_bottom" class="kl_padding kl_input_small" type="text" rel="bottom" placeholder="#">' +
-            '                      <a href="#" id="kl_add_padding_bottom" class="btn add-on" data-tooltip="top" ' +
-            '                          title="Apply bottom padding to selected element">' +
-            '                          <i class="icon-add"></i> Bottom' +
-            '                      </a>' +
-            '                   </div>' +
-            '               </div>' +
-            '           </div>' +
+            '           <button id="kl_padding_default" class="btn btn-mini">Reset Padding to Default</button>' +
             '       </div>' +
-            '       <div id="kl_margins" class="kl_border_spacing_section">' +
-            '           <h4>Margins:</h4>' +
-            '           <div class="btn-group">' +
-            '               <button id="kl_margins_current" class="btn btn-mini hide" data-tooltip="top" title="Populate Fields based on current element">Current</button>' +
-            '               <button id="kl_margins_apply" class="btn btn-mini" data-tooltip="top" title="Apply Entered values to current element">Apply</button>' +
-            '               <button id="kl_margins_clear" class="btn btn-mini" data-tooltip="top" title="Clear margin input fields">Clear</button>' +
-            '               <button id="kl_margins_default" class="btn btn-mini" data-tooltip="top" title="Reset current element&rsquo;s margins to default">Default</button>' +
+            '       <div id="kl_margins" class="kl_border_spacing_section" style="display:none;">' +
+            '           <h4>Selected <span class="kl_current_node_title"></span> Margins:</h4>' +
+            '           <div class="btn-group-label kl_margin_top">' +
+            '               <input id="kl_margin_input_all" class="kl_margins_all kl_input_small" type="number" placeholder="#">' +
+            '               <label for="kl_margin_input_all">All Margins</label><hr>' +
+            '               <input id="kl_margin_input_top" class="kl_margins kl_input_small" type="number" rel="top" placeholder="#">' +
+            '               <label for="kl_margin_input_top">Top <span class="screenreader-only">Margin</span></label><br>' +
+            '               <input id="kl_margin_input_left" class="kl_margins kl_input_small" type="number" rel="left" placeholder="#">' +
+            '               <label for="kl_margin_input_left">Left <span class="screenreader-only">Margin</span></label><br>' +
+            '               <input id="kl_margin_input_bottom" class="kl_margins kl_input_small" type="number" rel="bottom" placeholder="#">' +
+            '               <label for="kl_margin_input_bottom">Bottom <span class="screenreader-only">Margin</span></label><br>' +
+            '               <input id="kl_margin_input_right" class="kl_margins kl_input_small" type="number" rel="right" placeholder="#">' +
+            '               <label for="kl_margin_input_right">Right <span class="screenreader-only">Margin</span></label><br>' +
             '           </div>' +
-            '           <div class="btn-group-label kl_margin_bottom kl_margin_top"><span>Identical Margins:</span><br>' +
-            '                <div class="input-append">' +
-            '                   <input id="kl_margin_input_all" class="kl_margins_all kl_input_small" type="text" placeholder="#">' +
-            '                   <a href="#" id="kl_add_margin_all" class="btn add-on" data-tooltip="top" ' +
-            '                       title="Apply margin to all sides">' +
-            '                       <i class="icon-add"></i> All' +
-            '                   </a>' +
-            '                </div>' +
-            '           </div>' +
-            '           <div class="btn-group-label kl_margin_bottom" style="clear:left;"><span>Individual Margins:</span><br>' +
-            '               <div style="text-align:center;">' +
-            '                   <div class="input-append" style="margin-bottom:3px;">' +
-            '                      <input id="kl_margin_input_top" class="kl_margins kl_input_small" type="text" rel="top" placeholder="#">' +
-            '                      <a href="#" id="kl_add_margin_top" class="btn add-on" data-tooltip="top" ' +
-            '                          title="Apply top margin to selected element">' +
-            '                          <i class="icon-add"></i> Top' +
-            '                      </a>' +
-            '                   </div>' +
-            '                   <div class="input-append" style="float:left; margin-bottom:3px;">' +
-            '                      <input id="kl_margin_input_left" class="kl_margins kl_input_small" type="text" rel="left" placeholder="#">' +
-            '                      <a href="#" id="kl_add_margin_left" class="btn add-on" data-tooltip="top" ' +
-            '                          title="Apply left margin to selected element">' +
-            '                          <i class="icon-add"></i> Left' +
-            '                      </a>' +
-            '                   </div>' +
-            '                   <div class="input-append" style="float:right; margin-bottom:3px;">' +
-            '                      <input id="kl_margin_input_right" class="kl_margins kl_input_small" type="text" rel="right" placeholder="#">' +
-            '                      <a href="#" id="kl_add_margin_right" class="btn add-on" data-tooltip="top" ' +
-            '                          title="Apply right margin to selected element">' +
-            '                          <i class="icon-add"></i> Right' +
-            '                      </a>' +
-            '                   </div>' +
-            '                   <div class="input-append" style="clear:both;">' +
-            '                      <input id="kl_margin_input_bottom" class="kl_margins kl_input_small" type="text" rel="bottom" placeholder="#">' +
-            '                      <a href="#" id="kl_add_margin_bottom" class="btn add-on" data-tooltip="top" ' +
-            '                          title="Apply bottom margin to selected element">' +
-            '                          <i class="icon-add"></i> Bottom' +
-            '                      </a>' +
-            '                   </div>' +
-            '               </div>' +
-            '           </div>' +
+            '           <button id="kl_margins_default" class="btn btn-mini">Reset Margins to Default</button>' +
             '       </div>' +
             '   </div>' +
             '   <div class="kl_instructions_wrapper">' +
@@ -2110,41 +2222,6 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
 //  COLORS                                                 //
 ///////////////////////////////////////////////////////////// 
 
-    ////// Supporting functions  //////
-    function klInitializeElementColorPicker(inputName, attribute) {
-        var chosenColor = '',
-            // startingColor = klGetColor($(iframeID).contents().find(targetElement), attribute),
-            bgHex,
-            textColor;
-        $(inputName).spectrum({
-            // // color: startingColor,
-            showAlpha: true,
-            preferredFormat: 'hex',
-            showPaletteOnly: true,
-            togglePaletteOnly: true,
-            showInput: true,
-            palette: klToolsVariables.klThemeColors,
-            allowEmpty: true,
-            replacerClassName: 'spectrum_trigger',
-            containerClassName: 'spectrum_picker',
-            cancelText: 'Close',
-            localStorageKey: 'spectrum.wiki',
-            move: function (tinycolor) {
-                $(inputName).val(tinycolor);
-                chosenColor = $(inputName).val();
-                // $(iframeID).contents().find(targetElement).css(attribute, chosenColor);
-                tinyMCE.DOM.setStyle(tinymce.activeEditor.selection.getNode(), attribute, chosenColor);
-                if (attribute === 'background-color') {
-                    bgHex = chosenColor.replace('#', '');
-                    textColor = getContrastYIQ(bgHex);
-                    // $(iframeID).contents().find(targetElement).css('color', textColor);
-                    tinyMCE.DOM.setStyle(tinymce.activeEditor.selection.getNode(), 'color', textColor);
-                }
-                tinyMCE.DOM.setAttrib(tinymce.activeEditor.selection.getNode(), 'data-mce-style', '');
-                // $(iframeID).contents().find(targetElement).removeAttr('data-mce-style');
-            }
-        });
-    }
 
     ////// On Ready/Click functions  //////
     function klColorsReady() {
@@ -2161,6 +2238,11 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             tinyMCE.DOM.setStyle(tinymce.activeEditor.selection.getNode(), 'color', '');
             tinyMCE.DOM.setStyle(tinymce.activeEditor.selection.getNode(), 'border-color', '');
             tinyMCE.DOM.setAttrib(tinymce.activeEditor.selection.getNode(), 'data-mce-style', '');
+        });
+        tinyMCE.activeEditor.onNodeChange.add(function () {
+            klInitializeElementColorPicker('#kl_selected_element_text_color', 'color');
+            klInitializeElementColorPicker('#kl_selected_element_bg_color', 'background-color');
+            klInitializeElementColorPicker('#kl_selected_element_border_color', 'border-color');
         });
     }
 
@@ -2183,7 +2265,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             '</h3>' +
             '<div id="kl_custom_buttons">' +
             '   <div class="btn-group-label kl_btn_examples kl_margin_bottom">' +
-            '       <span>Style:</span><br>' +
+            '       <span>Selected <span class="kl_current_node_title"></span> Colors:</span><br>' +
             '       <table class="table table-striped table-condensed">' +
             '       <thead><tr><th>Aspect</th><th>Color</th></tr></thead>' +
             '           <tbody>' +
@@ -3783,7 +3865,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
         klTablesReady();
     }
     function klCustomTablesButton() {
-        var tablesDialog = '<a href="#" class="btn btn-mini kl_table_dialog_trigger" style="margin-left:5px;"><i class="fa fa-table"></i> Custom Tables</a>' +
+        var tablesDialog = '<a href="#" class="btn btn-mini kl_table_dialog_trigger kl_margin_top"><i class="fa fa-table"></i> Custom Table</a>' +
             '<div id="kl_tables_dialog" title="Custom Tables" style="display:none;">' +
             '    <div class="btn-group kl_table_options kl_option_third_wrap">' +
             '        <a href="#" class="btn btn-small active" rel=".kl_table_new">Create</a>' +
@@ -3859,7 +3941,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             '        </div>' +
             '    </div>' +
             '</div>';
-        $('.kl_add_style_to_iframe').after(tablesDialog);
+        $('#kl_tools').append(tablesDialog);
         $('.kl_table_dialog_trigger').unbind("click").click(function (e) {
             e.preventDefault();
             $('#kl_tables_dialog').dialog({ position: { my: 'right top', at: 'left top', of: '#kl_tools' }, modal: false, width: 255 });
@@ -4347,7 +4429,8 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
                         dateDiff = klGetDateDiff(startDate, stopDate, 'milliseconds');
                         numModules = $('.kl_modules_from').length;
                         for (i = 1; i < numModules; i++) {
-                            startDate = stopDate + 86400000;
+                            // Add 1 day and 2.5 hours (to account for daylight savings)
+                            startDate = stopDate + 86400000 + 9000000;
                             stopDate = startDate + dateDiff;
                             printStart = new Date(startDate);
                             printStop = new Date(stopDate);
@@ -4687,7 +4770,12 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             if ($('.kl_syllabus_policies_yes').hasClass('active')) {
                 $(iframeID).contents().find('.universityPolicies').remove();
                 $(iframeID).contents().find('#kl_institutional_policies').remove();
-                $(iframeID).contents().find('body').append('<div id="kl_institutional_policies" />');
+                // If the tools were used to add content, include policies in wrapper if not, put in body
+                if ($(iframeID).contents().find('#kl_wrapper').length > 0) {
+                    $(iframeID).contents().find('#kl_wrapper').append('<div id="kl_institutional_policies" />');
+                } else {
+                    $(iframeID).contents().find('body').append('<div id="kl_institutional_policies" />');
+                }
                 $(iframeID).contents().find('#kl_institutional_policies').html(policies);
             }
         });
@@ -5618,10 +5706,11 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             '   </div>' +
             '   <a href="#" class="btn btn-mini kl_mce_preview" rel="">Preview</a>' +
             '</div>',
-            klCleanUpButtons = '<div class="btn-group">' +
-            '   <a class="btn btn-mini kl_remove_empty" href="#" data-tooltip="left" title="This button will clean up the page contents by removing any empty elements.' +
+            klCleanUpButtons = '<a class="btn btn-mini kl_remove_empty" href="#" data-tooltip="left" title="This button will clean up the page contents by removing any empty elements.' +
             '       This is especially useful when using the <i class=\'icon-collection-save\'></i> feature."><i class="icon-trash"></i> Clear Empty Elements</a>' +
-            '   <a class="btn btn-mini kl_unwrap" href="#" data-tooltip="top" title="Remove the tag that wraps the selected element"><i class="fa fa-code"></i> Unwrap Selected</a>' +
+            '<div class="btn-group">' +
+            '   <a class="btn btn-mini kl_unwrap" href="#" data-tooltip="left" title="Remove the tag that wraps the selected element"><i class="fa fa-code"></i> Remove <span class="kl_current_node_title"></span> Tag</a>' +
+            '   <a class="btn btn-mini kl_delete_node" href="#" data-tooltip="left" title="Delete the selected element and it&lsquo;s contents"><i class="icon-end"></i> Delete <span class="kl_current_node_title"></span></a>' +
             '</div>',
             tabNavigation = '<ul>' +
             '   <li><a href="#canvas_tools" class="kl_tools_tab">Canvas Tools</a></li>' +
