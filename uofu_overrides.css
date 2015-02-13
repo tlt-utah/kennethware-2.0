@@ -56,39 +56,6 @@ you should move a (smaller) Cavas logo to the right side of the header'*/
 #equella_preview_dialog > iframe:nth-child(2) { height: 600px !important; }
 
 
-/****************************** Kennethware2 changes for UofU **************************/
-#kl_wrapper #kl_navigation { background-color: #cc0000 !important; }
-#kl_wrapper.kl_bookmark #kl_banner {background-color: #cc0000 !important; }
-#kl_wrapper.kl_apple #kl_banner h2 {background-color: #cc0000 !important; }
-#kl_wrapper.kl_square_right #kl_banner_left {background:  #cc0000 !important; } 
-#kl_wrapper.kl_box_left #kl_banner #kl_banner_left {background: #cc0000 !important; } 
-#kl_wrapper.kl_box_left_2 #kl_banner #kl_banner_left {background: #000000 !important; }  
-#kl_wrapper.kl_box_left_3 #kl_banner #kl_banner_left {background: #808080 !important; } 
-#kl_wrapper.kl_square_right h2 {background: #808080 !important; } 
-#kl_wrapper.kl_square_right_2 h2 {background: #cc0000 !important; }
-#kl_wrapper.kl_square_right_2 #kl_banner_left {background: #000000 !important; }
-#kl_wrapper.kl_square_right_3 h2 {background: #cc0000 !important; }
-#kl_wrapper.kl_square_right_3 #kl_banner_left {background: #808080 !important; }
-#kl_wrapper.kl_rounded_inset #kl_banner { background: #cc0000 !important; }
-#kl_wrapper.kl_rounded_inset_2 #kl_banner { background: #000000 !important; }
-#kl_wrapper.kl_rounded_inset_3 #kl_banner { background: #808080 !important; }
-#kl_wrapper.kl_circle_left #kl_banner { background: #808080 !important; }
-#kl_wrapper.kl_circle_left #kl_banner_left { background: #cc0000 !important; }
-#kl_wrapper.kl_circle_left_2 #kl_banner { background: #cc0000 !important; }
-#kl_wrapper.kl_circle_left_2 #kl_banner_left { background: #000000 !important; }
-#kl_wrapper.kl_circle_left_3 #kl_banner { background: #cc0000 !important; }
-#kl_wrapper.kl_circle_left_3 #kl_banner_left { background: #808080 !important; }
-#kl_wrapper.kl_emta #kl_banner h2 { background-color: #cc0000 !important; } 
-#kl_wrapper.kl_emta #kl_banner #kl_banner_bottom #kl_description { background: #cc0000 !important; }
-#kl_wrapper.kl_emta #kl_banner #kl_banner_left .kl_mod_num{ background: #cc0000 !important; color: #FFF !important; }
-#kl_wrapper.kl_emta h3 { color: #000 !important; }
-
-#kl_wrapper.kl_fp_panel_nav_2 #kl_banner {background-color: #cc0000 !important;}
-#kl_wrapper.kl_fp_horizontal_nav_2 #kl_banner {background-color: #cc0000 !important;}
-#kl_wrapper.kl_basic_color #kl_banner {background-color: #cc0000 !important;}
-/************* UofU color codes {red: cc0000, black: 000000, grey: 808080} *************/
-
-
 /************************************************************/
 /**************                                **************/
 /**************       KENNETHWARE STYLING      **************/
@@ -375,7 +342,8 @@ you should move a (smaller) Cavas logo to the right side of the header'*/
   #kl_tools .kl_success {background: #417e42; box-shadow: 0 1px 1px rgba(0,0,0,0.25); color: #ffffff; font-weight: bold; margin-bottom: 10px; padding: 5px; text-align: center; }
   .kl_border_top_rounded {border-top-right-radius: 5px; border-top-left-radius: 5px;}
   .kl_border_bottom_rounded {border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;}
-
+  #kl_tools span.kl_current_node_title {text-transform: lowercase; color: #0099E0; font-style: italic; font-size: 12px;}
+  #kl_tools hr {border: 1px solid #ccc; border-width: 1px 0 0; margin: 5px 0; }
   /* Shrink Inputs with appended buttons in tools wrapper */
   #kl_tools .input-append input[type="text"] {font-size: 12px; height: 14px; padding: 4px; }
   #kl_tools .input-append .add-on {font-size: 12px; height: 14px; line-height: 14px; padding: 4px;}
@@ -496,7 +464,10 @@ you should move a (smaller) Cavas logo to the right side of the header'*/
 
   /* Borders and Spacing Panel */
   #kl_tools .btn-mini.icon-end:before { font-size: 10.5px; margin: 0 -2px -2px 0; }
-
+  #kl_tools .kl_floated_inputs select {width: inherit; padding: 3px; height: 24px; margin-bottom: 0;}
+  #kl_tools .kl_border_spacing_section input {font-size: 14px; height: 18px; padding: 2px; width: 40px; margin-bottom: 0;}
+  #kl_tools .kl_floated_inputs .sp-replacer.sp-light.spectrum_trigger {padding: 2px; border: 1px solid #ccc; margin-bottom: 0; border-radius: 3px; }
+  #kl_tools .kl_floated_inputs .btn-mini {margin-bottom: 10px; }
   /* Buttons Panel */
   #kl_tools .kl_btn_examples .kl_custom_button_style { width: 90px; margin-top: 5px; }
 
@@ -653,7 +624,7 @@ you should move a (smaller) Cavas logo to the right side of the header'*/
   #kl_modules .kl_modules_active_start {color: green;}
   #kl_modules .kl_modules_active_stop {color: red;}
   .ui-dialog {z-index: 100;}
-
+  #kl_modules .locked_title { color: #A0A0A0;}
   .kl_social_media_input { width: 180px; }
 
   #kl_wrapper #kl_banner { margin-bottom: 20px;}
@@ -685,6 +656,7 @@ you should move a (smaller) Cavas logo to the right side of the header'*/
     box-shadow: 2px 2px 2px #A2A2A2;
     border-radius: 5px;
   }
+
   /***** Other *****/
   #kl_wrapper {position: relative;} /* allow positioning of sub elements */
   #kl_wrapper .kl_image_full_width {width: 100%; height: auto; }
@@ -841,8 +813,8 @@ you should move a (smaller) Cavas logo to the right side of the header'*/
   #kl_wrapper.kl_fp_circles_1x1 #kl_banner_image img{border: none; border-radius: 160px; }
   #kl_wrapper.kl_fp_circles_1x1 #kl_navigation {background-color: transparent; display: table; margin: -300px auto 0; overflow: hidden; position: relative; width: 660px; height: 360px; }
   #kl_wrapper.kl_fp_circles_1x1 #kl_navigation ul {width: 0px; margin: 0px; }
-  #kl_wrapper.kl_fp_circles_1x1 #kl_navigation ul li {background-color: #c2c2c2; background-image: none; border-radius: 75px; display: block; font-size: 18px; height: 130px; overflow: hidden; padding: 0; position: absolute; text-align: center; white-space: normal; width: 130px; }
-  #kl_wrapper.kl_fp_circles_1x1 #kl_navigation ul li a {background-color: #013953; color: #fff; display: block; padding: 35px 0 80px; text-align: center; width: 100%; }
+  #kl_wrapper.kl_fp_circles_1x1 #kl_navigation ul li {background-color: #013953; background-image: none; border-radius: 75px; display: block; font-size: 18px; height: 130px; overflow: hidden; padding: 0; position: absolute; text-align: center; white-space: normal; width: 130px; }
+  #kl_wrapper.kl_fp_circles_1x1 #kl_navigation ul li a {color: #fff; display: block; padding: 35px 0 80px; text-align: center; width: 100%; }
   #kl_wrapper.kl_fp_circles_1x1 #kl_navigation ul li:nth-child(1) {top: 0px; left: 0px; }
   #kl_wrapper.kl_fp_circles_1x1 #kl_navigation ul li:nth-child(2) {top: 160px; left: 0px; }
   #kl_wrapper.kl_fp_circles_1x1 #kl_navigation ul li:nth-child(3) {top: 0px; right: 0px; }
@@ -1206,7 +1178,7 @@ you should move a (smaller) Cavas logo to the right side of the header'*/
   /***** FP & CP COLORED HEADINGS THEME  *******************************/
   
   /* FP */
-  #kl_wrapper.kl_fp_colored_headings #kl_banner { border: none; background: #2F4661; color: #fff; margin: 0 0 5px 0; padding: 0 0 5px; }
+  #kl_wrapper.kl_fp_colored_headings #kl_banner { border: none; background: #2F4661; color: #fff; margin: 0 0 5px 0; padding: 0 0 5px; overflow: visible;}
   #kl_wrapper.kl_fp_colored_headings #kl_banner h2 { position: relative; text-align: center; text-transform: uppercase; padding: 20px 0 0;}
   #kl_wrapper.kl_fp_colored_headings #kl_banner_image { border: none; margin: 0;}
   #kl_wrapper.kl_fp_colored_headings #kl_banner #kl_banner_left {background-color: #fff; color: #696969; display: inline-block; font-size: 18px; line-height: 20px; padding: 5px 20px; position: absolute; left: 15px; top: 15px; border-bottom: 10px solid #696969;}
@@ -1283,6 +1255,14 @@ you should move a (smaller) Cavas logo to the right side of the header'*/
   #kl_wrapper.kl_colored_headings #kl_modules.kl_modules_tabbed li[class*=fa-]:before,
   #kl_wrapper.kl_fp_colored_headings #kl_modules.kl_modules_tabbed li[class^=fa-]:before,
   #kl_wrapper.kl_colored_headings #kl_modules.kl_modules_tabbed li[class^=fa-]:before {margin: 7px 0 5px 10px; font-size: 20px; float: left;}
+  .mceContentBody #kl_wrapper.kl_fp_colored_headings #kl_modules.kl_modules_tabbed li[class*=icon-]:before,
+  .mceContentBody #kl_wrapper.kl_colored_headings #kl_modules.kl_modules_tabbed li[class*=icon-]:before,
+  .mceContentBody #kl_wrapper.kl_fp_colored_headings #kl_modules.kl_modules_tabbed li[class^=icon-]:before,
+  .mceContentBody #kl_wrapper.kl_colored_headings #kl_modules.kl_modules_tabbed li[class^=icon-]:before,
+  .mceContentBody #kl_wrapper.kl_fp_colored_headings #kl_modules.kl_modules_tabbed li[class*=fa-]:before,
+  .mceContentBody #kl_wrapper.kl_colored_headings #kl_modules.kl_modules_tabbed li[class*=fa-]:before,
+  .mceContentBody #kl_wrapper.kl_fp_colored_headings #kl_modules.kl_modules_tabbed li[class^=fa-]:before,
+  .mceContentBody #kl_wrapper.kl_colored_headings #kl_modules.kl_modules_tabbed li[class^=fa-]:before {margin: 0 10px 0 0;}
 
 
   /* Default Headings */
@@ -1349,7 +1329,7 @@ you should move a (smaller) Cavas logo to the right side of the header'*/
   }
 
   /*********************************************************************/
-  /***** CP: BASIC BAR THEME    ********************************************/
+  /***** CP: BASIC BAR THEME    ****************************************/
 
   #kl_wrapper.kl_basic_bar #kl_banner { position:relative;}
   #kl_wrapper.kl_basic_bar #kl_banner h2 {line-height: 35px; border-radius: 5px; background: #8F0222; color: #fff; padding: 5px 10px 5px 2px; }
@@ -1363,3 +1343,48 @@ you should move a (smaller) Cavas logo to the right side of the header'*/
 /**************    END KENNETHWARE THEMES / CODE   ********************/
 /**************                                    ********************/
 /**********************************************************************/
+
+
+/****************************** Kennethware2 changes for UofU **************************/
+#kl_wrapper #kl_navigation { background-color: #cc0000; }
+
+#kl_wrapper.kl_bookmark #kl_banner { background-color: #cc0000; }
+#kl_wrapper.kl_apple #kl_banner h2 { background-color: #cc0000; }
+#kl_wrapper.kl_square_right #kl_banner_left { background: #cc0000; } 
+#kl_wrapper.kl_box_left #kl_banner #kl_banner_left { background: #cc0000; } 
+#kl_wrapper.kl_box_left_2 #kl_banner #kl_banner_left { background: #000000; }  
+#kl_wrapper.kl_box_left_3 #kl_banner #kl_banner_left { background: #808080; } 
+#kl_wrapper.kl_square_right h2 { background: #808080; } 
+#kl_wrapper.kl_square_right_2 h2 { background: #cc0000; }
+#kl_wrapper.kl_square_right_2 #kl_banner_left { background: #000000; }
+#kl_wrapper.kl_square_right_3 h2 { background: #cc0000; }
+#kl_wrapper.kl_square_right_3 #kl_banner_left { background: #808080; }
+#kl_wrapper.kl_rounded_inset #kl_banner { background: #cc0000; }
+#kl_wrapper.kl_rounded_inset_2 #kl_banner { background: #000000; }
+#kl_wrapper.kl_rounded_inset_3 #kl_banner { background: #808080; }
+#kl_wrapper.kl_circle_left #kl_banner { background: #808080; }
+#kl_wrapper.kl_circle_left #kl_banner_left { background: #cc0000; }
+#kl_wrapper.kl_circle_left_2 #kl_banner { background: #cc0000; }
+#kl_wrapper.kl_circle_left_2 #kl_banner_left { background: #000000; }
+#kl_wrapper.kl_circle_left_3 #kl_banner { background: #cc0000; }
+#kl_wrapper.kl_circle_left_3 #kl_banner_left { background: #808080; }
+#kl_wrapper.kl_emta #kl_banner h2 { background-color: #cc0000; } 
+#kl_wrapper.kl_emta #kl_banner #kl_banner_bottom #kl_description { background: #cc0000; }
+#kl_wrapper.kl_emta #kl_banner #kl_banner_left .kl_mod_num{ background: #cc0000; color: #FFF; }
+#kl_wrapper.kl_emta h3 { color: #000; }
+
+#kl_wrapper.kl_basic_color #kl_banner { background-color: #cc0000;}
+
+#kl_wrapper.kl_fp_panel_nav_2 #kl_navigation ul li a { color: #5C5858 !important; }
+#kl_wrapper.kl_fp_panel_nav_2 #kl_banner { background-color: #cc0000;}
+
+#kl_wrapper.kl_fp_horizontal_nav_2 #kl_banner { background-color: #cc0000;}
+
+#kl_wrapper.kl_fp_flat_sections #kl_banner,
+#kl_wrapper.kl_fp_flat_sections #kl_navigation,
+#kl_wrapper.kl_flat_sections #kl_navigation { background-color: #cc0000; }
+
+#kl_wrapper.kl_fp_colored_headings #kl_banner,
+#kl_wrapper.kl_fp_colored_headings #kl_navigation, 
+#kl_wrapper.kl_colored_headings #kl_navigation { background-color: #cc0000; }
+/************* UofU color codes {red: cc0000, black: 000000, grey: 808080} *************/
