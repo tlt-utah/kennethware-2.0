@@ -1,4 +1,4 @@
-var footer = '<table width="100%"><tr><td><span id="footer-links">' + '<a target="_blank" href="http://www.utah.edu/">© 2015 The University of Utah</a>' + '<a target="_blank" href="http://tlt.utah.edu/">Teaching and Learning Technologies</a>' + '<a target="_blank" href="https://uonline.utah.edu/">UOnline</a>' + '<a href="#" onclick="return false;">801.581.6112</a>' + '<a target="_blank" href="http://www.utah.edu/disclaimer/index.html">Disclaimer</a>' + '<a target="_blank" href="http://www.utah.edu/privacy/">Privacy</a>' + '</span></td>' + '<td style="text-align:right;"><a target="_blank" href="http://www.instructure.com"><img src="/images/footer-logo.png?1303834440"></a></td>' + '</tr></table>';
+var footer = '<table width="100%"><tr><td><span id="footer-links">' + '<a target="_blank" href="http://www.utah.edu/">© 2015 The University of Utah</a>' + '<a target="_blank" href="http://tlt.utah.edu/">Teaching and Learning Technologies</a>' + '<a target="_blank" href="http://uonline.utah.edu/">UOnline</a>' + '<a href="#" onclick="return false;">801.581.6112</a>' + '<a target="_blank" href="http://www.utah.edu/disclaimer/index.html">Disclaimer</a>' + '<a target="_blank" href="http://www.utah.edu/privacy/">Privacy</a>' + '</span></td>' + '<td style="text-align:right;"><a target="_blank" href="http://www.instructure.com"><img src="/images/footer-logo.png?1303834440"></a></td>' + '</tr></table>';
 
 $('#footer').html(footer);
 $('input[id="build_pseudonym_for_email"]').hide();
@@ -39,7 +39,7 @@ $(document).click(function() {
             if (subject.length == 0) alert('Please provide a subject.');
             else if (comment.length == 0) alert('Please provide a description.');
             else {
-                $.post('https://uonline.utah.edu/zendesk/feedback/add', form.serialize());
+                $.post('https://examservices.utah.edu/zendesk/feedback/add', form.serialize());
                 setTimeout(function() {
                     alert("A ticket has been submitted to TLT.\n\nThank you for your time.");
                     $('input[type="reset"]').click();
@@ -77,7 +77,7 @@ $(document).click(function() {
 // Development version will be loaded in the following courses
 var iframeID,
     // Path to where the canvasCustomTools folder is located
-    klToolsPath = 'https://uonline.utah.edu:8443/kennethware2/',
+    klToolsPath = 'https://examservices.utah.edu:8443/kennethware2/',
     // Path to the tools_variables file
     klToolsVariablesFile = klToolsPath + 'js/tools_variables.js',
     // Path to additional_customization file
@@ -85,7 +85,7 @@ var iframeID,
     // To utilize the features that pull from the Canvas api you will need the hosted php files put their path here
     klApiToolsPath = klToolsPath + 'api/',
     // Path to institutional css file
-    klGlobalCSSFile = 'https://uonline.utah.edu/canvas/uofu_overrides.css',
+    klGlobalCSSFile = 'https://examservices.utah.edu/canvas/uofu_overrides.css',
     klFontAwesomePath = '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css',
     coursenum;
 

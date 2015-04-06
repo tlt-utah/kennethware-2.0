@@ -1,0 +1,246 @@
+#header {
+	background-color:rgb(65,64,66);
+	background-image:none;
+}
+
+#header-logo, #header.no-user #header-logo {
+	background-image:none;
+}
+
+#header-logo-secondary {
+	background-image:none;
+}
+
+#main {
+	background-image:none !important;
+}
+
+#footer {
+	display:none;
+}
+
+/**************************************************************/
+/********** FP & CP: UOFU_SW & UOFU_ECON THEME ****************/
+
+/* UOFU_SW FP: front page style from 'kl_fp_flat_sections' */
+#kl_wrapper.fp_uofu_sw #kl_banner {background: #1e5799; color: #fff; margin-bottom: 5px; padding: 1px; }
+#kl_wrapper.fp_uofu_sw #kl_banner h2 {margin: 10px 5px 9px 120px; text-transform: uppercase; }
+#kl_wrapper.fp_uofu_sw #kl_banner #kl_banner_left .kl_mod_text {display: block; padding: 15px 0 0; text-align: center; }
+#kl_wrapper.fp_uofu_sw #kl_banner #kl_banner_left .kl_mod_num {display: block; padding: 0 0 15px; text-align: center; }
+#kl_wrapper.fp_uofu_sw #kl_introduction p:first-child{font-size: 21px; font-weight: 200; line-height: 30px; }
+#kl_wrapper.fp_uofu_sw #kl_banner #kl_banner_left{background-color: #fff; border-radius: 50px; color: #696969; display: inline-block; font-size: 0.9em; height: 90px; left: 20px; line-height: 30px; margin: 7px 0; overflow: hidden; position: absolute; width: 90px; }
+#kl_wrapper.fp_uofu_sw #kl_banner #kl_banner_right {display: block; font-size: 1em; margin-top: 2px; }
+#kl_wrapper.fp_uofu_sw #kl_banner #kl_banner_right .kl_subtitle { display: block; font-size: medium; line-height: 20px; margin-top: 5px;}
+
+/* UOFU_ECON FP: front page style from 'kl_fp_colored_headings' */
+#kl_wrapper.fp_uofu_econ #kl_banner { border: none; background: #2F4661; color: #fff; margin: 0 0 5px 0; padding: 0 0 5px; overflow: visible;}
+#kl_wrapper.fp_uofu_econ #kl_banner h2 { position: relative; text-align: center; text-transform: uppercase; padding: 20px 0 0;}
+#kl_wrapper.fp_uofu_econ #kl_banner_image { border: none; margin: 0;}
+#kl_wrapper.fp_uofu_econ #kl_banner #kl_banner_left {background-color: #fff; color: #696969; display: inline-block; font-size: 18px; line-height: 20px; padding: 5px 20px; position: absolute; left: 15px; top: 15px; border-bottom: 10px solid #696969;}
+#kl_wrapper.fp_uofu_econ #kl_banner #kl_banner_left .kl_mod_text,
+#kl_wrapper.fp_uofu_econ #kl_banner #kl_banner_left .kl_mod_num  {width: 100%; padding: 2px 0 1px; display: block; font-size: 24px; line-height: 26px; text-align: center;}
+#kl_wrapper.fp_uofu_econ #kl_banner #kl_banner_right {display: block; font-size: 35px; margin: 0 0 0 135px; text-align: left; }
+#kl_wrapper.fp_uofu_econ #kl_banner #kl_banner_right .kl_subtitle { display: block; font-size: medium; line-height: 20px; margin-top: 5px;}
+
+/* SHARED: front & content page style from 'kl_fp_flat_sections' */
+#kl_wrapper.uofu_sw.kl_show_title #kl_banner,
+#kl_wrapper.uofu_econ.kl_show_title #kl_banner {margin-top: 25px; }
+#kl_wrapper.fp_uofu_sw #kl_banner_image,
+#kl_wrapper.uofu_sw #kl_banner_image,
+#kl_wrapper.fp_uofu_econ #kl_banner_image,
+#kl_wrapper.uofu_econ #kl_banner_image {padding: 0;margin-bottom: 5px;}
+#kl_wrapper.fp_uofu_sw #kl_banner_image img,
+#kl_wrapper.uofu_sw #kl_banner_image img,
+#kl_wrapper.fp_uofu_econ #kl_banner_image img,
+#kl_wrapper.uofu_econ #kl_banner_image img {border: none; padding: 0 0 3px 0; }
+#kl_wrapper.fp_uofu_sw #kl_progress_bar,
+#kl_wrapper.uofu_sw #kl_progress_bar, 
+#kl_wrapper.fp_uofu_econ #kl_progress_bar,
+#kl_wrapper.uofu_econ #kl_progress_bar {background: #fff; padding: 5px;margin: 25px 0 40px;}
+#kl_wrapper.fp_uofu_sw #kl_navigation, 
+#kl_wrapper.uofu_sw #kl_navigation,
+#kl_wrapper.fp_uofu_econ #kl_navigation, 
+#kl_wrapper.uofu_econ #kl_navigation {width: 100%; background-color: #1e5799; margin: 0 0 20px; color: #fff; height: 48px; overflow: hidden; padding: 0;}
+#kl_wrapper.fp_uofu_sw #kl_navigation ul, 
+#kl_wrapper.uofu_sw #kl_navigation ul, 
+#kl_wrapper.fp_uofu_econ #kl_navigation ul, 
+#kl_wrapper.uofu_econ #kl_navigation ul {margin-bottom: 0;}
+#kl_wrapper.fp_uofu_sw #kl_navigation li, 
+#kl_wrapper.uofu_sw #kl_navigation li,
+#kl_wrapper.fp_uofu_econ #kl_navigation li, 
+#kl_wrapper.uofu_econ #kl_navigation li {padding: 7px 5px; background: none;}
+#kl_wrapper.fp_uofu_sw #kl_navigation a[class*=icon-]:before,
+#kl_wrapper.fp_uofu_sw #kl_navigation a[class^=icon-]:before,
+#kl_wrapper.fp_uofu_sw #kl_navigation a[class*=fa-]:before,
+#kl_wrapper.fp_uofu_sw #kl_navigation a[class^=fa-]:before,
+#kl_wrapper.uofu_sw #kl_navigation a[class*=icon-]:before,
+#kl_wrapper.uofu_sw #kl_navigation a[class^=icon-]:before,
+#kl_wrapper.uofu_sw #kl_navigation a[class*=fa-]:before,
+#kl_wrapper.uofu_sw #kl_navigation a[class^=fa-]:before,
+#kl_wrapper.fp_uofu_econ #kl_navigation a[class*=icon-]:before,
+#kl_wrapper.fp_uofu_econ #kl_navigation a[class^=icon-]:before,
+#kl_wrapper.fp_uofu_econ #kl_navigation a[class*=fa-]:before,
+#kl_wrapper.fp_uofu_econ #kl_navigation a[class^=fa-]:before,
+#kl_wrapper.uofu_econ #kl_navigation a[class*=icon-]:before,
+#kl_wrapper.uofu_econ #kl_navigation a[class^=icon-]:before,
+#kl_wrapper.uofu_econ #kl_navigation a[class*=fa-]:before,
+#kl_wrapper.uofu_econ #kl_navigation a[class^=fa-]:before {display: inline-block; background: #fff; padding: 7px 0px; text-align: center; border-radius: 20px; color: #696969; margin-right: 8px; border: 1px solid #696969;}
+#kl_wrapper.fp_uofu_sw h3, 
+#kl_wrapper.uofu_sw h3, 
+#kl_wrapper.fp_uofu_econ h3, 
+#kl_wrapper.uofu_econ h3 {color: #000; border-top: 1px solid #E0E0E0; text-align: center; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 22px; letter-spacing: 3px; text-transform: uppercase; }
+#kl_wrapper.fp_uofu_sw h3:before, 
+#kl_wrapper.uofu_sw h3:before,
+#kl_wrapper.fp_uofu_econ h3:before, 
+#kl_wrapper.uofu_econ h3:before {color: #696969; display: block; margin: -25px auto 0; text-align: center; border: 1px solid #E0E0E0; width: 45px; border-radius: 50px; height: 50px; line-height: 50px; background-color: #fff; font-size: 25px; padding-left: 5px; }
+#kl_wrapper.fp_uofu_sw h4, 
+#kl_wrapper.uofu_sw h4,
+#kl_wrapper.fp_uofu_econ h4, 
+#kl_wrapper.uofu_econ h4 {color: #000; border-bottom: 1px solid #E0E0E0; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 18px; letter-spacing: 3px; text-transform: uppercase; margin: 40px 0 20px; }
+#kl_wrapper.fp_uofu_sw h5, 
+#kl_wrapper.uofu_sw h5, 
+#kl_wrapper.fp_uofu_econ h5, 
+#kl_wrapper.uofu_econ h5 {color: #000; border-bottom: 1px solid #E0E0E0; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 16px; letter-spacing: 3px; margin: 40px 0 20px; }
+#kl_wrapper.fp_uofu_sw > div, 
+#kl_wrapper.uofu_sw > div, 
+#kl_wrapper.fp_uofu_econ > div, 
+#kl_wrapper.uofu_econ > div {padding: 25px 45px 45px; margin-bottom: 25px; font-size: 16px; overflow: hidden }
+#kl_wrapper.fp_uofu_sw > div img, 
+#kl_wrapper.uofu_sw > div img,
+#kl_wrapper.fp_uofu_econ > div img, 
+#kl_wrapper.uofu_econ > div img {border: 1px solid #ccc; padding: 5px; background: #fff; }
+#kl_wrapper.fp_uofu_sw .link_holder img, 
+#kl_wrapper.uofu_sw .link_holder img,
+#kl_wrapper.fp_uofu_econ .link_holder img, 
+#kl_wrapper.uofu_econ .link_holder img {border:none; background: none; }
+#kl_wrapper.fp_uofu_sw > div:nth-child(odd), 
+#kl_wrapper.uofu_sw > div:nth-child(odd), 
+#kl_wrapper.fp_uofu_econ > div:nth-child(odd), 
+#kl_wrapper.uofu_econ > div:nth-child(odd) {background: #f8f8f8; }
+#kl_wrapper.fp_uofu_sw .well, 
+#kl_wrapper.uofu_sw .well,
+#kl_wrapper.fp_uofu_econ .well, 
+#kl_wrapper.uofu_econ .well {min-height: 20px; padding: 19px; margin-bottom: 20px; background-color: #f5f5f5; border: 1px solid #e3e3e3; border-radius: 4px; -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.05); box-shadow: inset 0 1px 1px rgba(0,0,0,.05); }
+#kl_wrapper.fp_uofu_sw #kl_modules li[class*=icon-]:before,
+#kl_wrapper.uofu_sw #kl_modules li[class*=icon-]:before,
+#kl_wrapper.fp_uofu_sw #kl_modules li[class^=icon-]:before,
+#kl_wrapper.uofu_sw #kl_modules li[class^=icon-]:before,
+#kl_wrapper.fp_uofu_econ #kl_modules li[class*=icon-]:before,
+#kl_wrapper.uofu_econ #kl_modules li[class*=icon-]:before,
+#kl_wrapper.fp_uofu_econ #kl_modules li[class^=icon-]:before,
+#kl_wrapper.uofu_econ #kl_modules li[class^=icon-]:before {margin: 0 10px 5px 0; font-size: 20px; float: left;}
+#kl_wrapper.fp_uofu_sw #kl_modules li[class*=fa-]:before,
+#kl_wrapper.uofu_sw #kl_modules li[class*=fa-]:before,
+#kl_wrapper.fp_uofu_sw #kl_modules li[class^=fa-]:before,
+#kl_wrapper.uofu_sw #kl_modules li[class^=fa-]:before,
+#kl_wrapper.fp_uofu_econ #kl_modules li[class*=fa-]:before,
+#kl_wrapper.uofu_econ #kl_modules li[class*=fa-]:before,
+#kl_wrapper.fp_uofu_econ #kl_modules li[class^=fa-]:before,
+#kl_wrapper.uofu_econ #kl_modules li[class^=fa-]:before {margin: 0 10px 5px 0; font-size: 20px; float: left;}
+#kl_wrapper.fp_uofu_sw #kl_modules.kl_modules_tabbed li[class*=icon-]:before,
+#kl_wrapper.uofu_sw #kl_modules.kl_modules_tabbed li[class*=icon-]:before,
+#kl_wrapper.fp_uofu_sw #kl_modules.kl_modules_tabbed li[class^=icon-]:before,
+#kl_wrapper.uofu_sw #kl_modules.kl_modules_tabbed li[class^=icon-]:before, 
+#kl_wrapper.fp_uofu_econ #kl_modules.kl_modules_tabbed li[class*=icon-]:before,
+#kl_wrapper.uofu_econ #kl_modules.kl_modules_tabbed li[class*=icon-]:before,
+#kl_wrapper.fp_uofu_econ #kl_modules.kl_modules_tabbed li[class^=icon-]:before,
+#kl_wrapper.uofu_econ #kl_modules.kl_modules_tabbed li[class^=icon-]:before {margin: 9px 0 5px 10px; font-size: 20px; float: left;}
+#kl_wrapper.fp_uofu_sw #kl_modules.kl_modules_tabbed li[class*=fa-]:before,
+#kl_wrapper.uofu_sw #kl_modules.kl_modules_tabbed li[class*=fa-]:before,
+#kl_wrapper.fp_uofu_sw #kl_modules.kl_modules_tabbed li[class^=fa-]:before,
+#kl_wrapper.uofu_sw #kl_modules.kl_modules_tabbed li[class^=fa-]:before,
+#kl_wrapper.fp_uofu_econ #kl_modules.kl_modules_tabbed li[class*=fa-]:before,
+#kl_wrapper.uofu_econ #kl_modules.kl_modules_tabbed li[class*=fa-]:before,
+#kl_wrapper.fp_uofu_econ #kl_modules.kl_modules_tabbed li[class^=fa-]:before,
+#kl_wrapper.uofu_econ #kl_modules.kl_modules_tabbed li[class^=fa-]:before {margin: 7px 0 5px 10px; font-size: 20px; float: left;}
+.mceContentBody #kl_wrapper.fp_uofu_sw #kl_modules.kl_modules_tabbed li[class*=icon-]:before,
+.mceContentBody #kl_wrapper.uofu_sw #kl_modules.kl_modules_tabbed li[class*=icon-]:before,
+.mceContentBody #kl_wrapper.fp_uofu_sw #kl_modules.kl_modules_tabbed li[class^=icon-]:before,
+.mceContentBody #kl_wrapper.uofu_sw #kl_modules.kl_modules_tabbed li[class^=icon-]:before,
+.mceContentBody #kl_wrapper.fp_uofu_sw #kl_modules.kl_modules_tabbed li[class*=fa-]:before,
+.mceContentBody #kl_wrapper.uofu_sw #kl_modules.kl_modules_tabbed li[class*=fa-]:before,
+.mceContentBody #kl_wrapper.fp_uofu_sw #kl_modules.kl_modules_tabbed li[class^=fa-]:before,
+.mceContentBody #kl_wrapper.uofu_sw #kl_modules.kl_modules_tabbed li[class^=fa-]:before, 
+.mceContentBody #kl_wrapper.fp_uofu_econ #kl_modules.kl_modules_tabbed li[class*=icon-]:before,
+.mceContentBody #kl_wrapper.uofu_econ #kl_modules.kl_modules_tabbed li[class*=icon-]:before,
+.mceContentBody #kl_wrapper.fp_uofu_econ #kl_modules.kl_modules_tabbed li[class^=icon-]:before,
+.mceContentBody #kl_wrapper.uofu_econ #kl_modules.kl_modules_tabbed li[class^=icon-]:before,
+.mceContentBody #kl_wrapper.fp_uofu_econ #kl_modules.kl_modules_tabbed li[class*=fa-]:before,
+.mceContentBody #kl_wrapper.uofu_econ #kl_modules.kl_modules_tabbed li[class*=fa-]:before,
+.mceContentBody #kl_wrapper.fp_uofu_econ #kl_modules.kl_modules_tabbed li[class^=fa-]:before,
+.mceContentBody #kl_wrapper.uofu_econ #kl_modules.kl_modules_tabbed li[class^=fa-]:before {margin: 0 10px 0 0;}
+#kl_wrapper.fp_uofu_sw #kl_introduction p:first-child,
+#kl_wrapper.uofu_sw #kl_introduction p:first-child,
+#kl_wrapper.fp_uofu_econ #kl_introduction p:first-child,
+#kl_wrapper.uofu_econ #kl_introduction p:first-child {font-size: 21px; font-weight: 200; line-height: 30px; }
+#kl_wrapper.fp_uofu_sw blockquote, 
+#kl_wrapper.uofu_sw blockquote, 
+#kl_wrapper.fp_uofu_econ blockquote, 
+#kl_wrapper.uofu_econ blockquote {border-left: 5px solid #E0E0E0; }
+
+/* CP: content page style from 'kl_fp_flat_sections' */
+#kl_wrapper.uofu_sw #kl_banner,
+#kl_wrapper.uofu_econ #kl_banner {background: #1e5799; padding: 20px 0; color: #fff; margin: 0 -25px 50px;}
+#kl_wrapper.uofu_sw #kl_banner h2, 
+#kl_wrapper.uofu_econ #kl_banner h2 {text-transform: uppercase; text-align: center; border-top: 1px solid #fff; }
+#kl_wrapper.uofu_sw #kl_banner #kl_banner_left,
+#kl_wrapper.uofu_econ #kl_banner #kl_banner_left {display: block; background-color: #fff; font-size: 18px; line-height: 30px; width: 250px; margin: -15px auto 10px; border-radius: 30px; color: #696969; }
+#kl_wrapper.uofu_sw #kl_banner #kl_banner_right, 
+#kl_wrapper.uofu_econ #kl_banner #kl_banner_right {font-size: 35px; margin-top: 20px; display: block; /*text-shadow: 1px 0px 2px #000;*/ }
+#kl_wrapper.uofu_sw #kl_banner #kl_banner_right .kl_subtitle, 
+#kl_wrapper.uofu_econ #kl_banner #kl_banner_right .kl_subtitle { display: block; font-size: medium; line-height: 20px; margin-top: 5px;}
+
+@media screen and (max-width: 1350px) {
+  #kl_wrapper.fp_uofu_sw #kl_navigation,
+  #kl_wrapper.uofu_sw #kl_navigation, 
+  #kl_wrapper.fp_uofu_econ #kl_navigation,
+  #kl_wrapper.uofu_econ #kl_navigation {font-size: 14px; padding-bottom:0px; height: 40px;}
+  #kl_wrapper.fp_uofu_sw #kl_navigation a[class*=icon-]:before,
+  #kl_wrapper.fp_uofu_sw #kl_navigation a[class^=icon-]:before,
+  #kl_wrapper.fp_uofu_sw #kl_navigation a[class*=fa-]:before,
+  #kl_wrapper.fp_uofu_sw #kl_navigation a[class^=fa-]:before,
+  #kl_wrapper.uofu_sw #kl_navigation a[class*=icon-]:before,
+  #kl_wrapper.uofu_sw #kl_navigation a[class^=icon-]:before,
+  #kl_wrapper.uofu_sw #kl_navigation a[class*=fa-]:before,
+  #kl_wrapper.uofu_sw #kl_navigation a[class^=fa-]:before,
+  #kl_wrapper.fp_uofu_econ #kl_navigation a[class*=icon-]:before,
+  #kl_wrapper.fp_uofu_econ #kl_navigation a[class^=icon-]:before,
+  #kl_wrapper.fp_uofu_econ #kl_navigation a[class*=fa-]:before,
+  #kl_wrapper.fp_uofu_econ #kl_navigation a[class^=fa-]:before,
+  #kl_wrapper.uofu_econ #kl_navigation a[class*=icon-]:before,
+  #kl_wrapper.uofu_econ #kl_navigation a[class^=icon-]:before,
+  #kl_wrapper.uofu_econ #kl_navigation a[class*=fa-]:before,
+  #kl_wrapper.uofu_econ #kl_navigation a[class^=fa-]:before {padding: 5px 0px; width:25px; }
+}
+@media screen and (max-width: 1100px) {
+  #kl_wrapper.fp_uofu_sw #kl_navigation,
+  #kl_wrapper.uofu_sw #kl_navigation, 
+  #kl_wrapper.fp_uofu_econ #kl_navigation,
+  #kl_wrapper.uofu_econ #kl_navigation {font-size: 12px; padding-bottom:0px;height: 35px;}
+  #kl_wrapper.fp_uofu_sw #kl_navigation a[class*=icon-]:before,
+  #kl_wrapper.fp_uofu_sw #kl_navigation a[class^=icon-]:before,
+  #kl_wrapper.fp_uofu_sw #kl_navigation a[class*=fa-]:before,
+  #kl_wrapper.fp_uofu_sw #kl_navigation a[class^=fa-]:before,
+  #kl_wrapper.uofu_sw #kl_navigation a[class*=icon-]:before,
+  #kl_wrapper.uofu_sw #kl_navigation a[class^=icon-]:before,
+  #kl_wrapper.uofu_sw #kl_navigation a[class*=fa-]:before,
+  #kl_wrapper.uofu_sw #kl_navigation a[class^=fa-]:before, 
+  #kl_wrapper.fp_uofu_econ #kl_navigation a[class*=icon-]:before,
+  #kl_wrapper.fp_uofu_econ #kl_navigation a[class^=icon-]:before,
+  #kl_wrapper.fp_uofu_econ #kl_navigation a[class*=fa-]:before,
+  #kl_wrapper.fp_uofu_econ #kl_navigation a[class^=fa-]:before,
+  #kl_wrapper.uofu_econ #kl_navigation a[class*=icon-]:before,
+  #kl_wrapper.uofu_econ #kl_navigation a[class^=icon-]:before,
+  #kl_wrapper.uofu_econ #kl_navigation a[class*=fa-]:before,
+  #kl_wrapper.uofu_econ #kl_navigation a[class^=fa-]:before {padding: 4px 0px; width: 21px; font-size: 12px; }
+}
+/**************************************************************/
+
+#kl_wrapper.fp_uofu_sw #kl_banner,
+#kl_wrapper.fp_uofu_sw #kl_navigation,
+#kl_wrapper.uofu_sw #kl_navigation,
+#kl_wrapper.fp_uofu_econ #kl_banner,
+#kl_wrapper.fp_uofu_econ #kl_navigation,
+#kl_wrapper.uofu_econ #kl_navigation { background-color: #cc0000; }
+
+#kl_contact_footer { text-align: center; }
