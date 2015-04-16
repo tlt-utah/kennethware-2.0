@@ -275,7 +275,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
         });        
         // Adjust node title when the node changes
         $('.kl_current_node_title').html('&lt;' + tinymce.activeEditor.selection.getNode().nodeName + '&gt;');
-        tinyMCE.activeEditor.onNodeChange.add(function () {
+        tinyMCE.activeEditor.on('NodeChange', function () {
             $('.kl_current_node_title').html('&lt;' + tinymce.activeEditor.selection.getNode().nodeName + '&gt;');
         });
     }
@@ -1024,13 +1024,13 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
                 '<a html="#" class="kl_identify_section kl_identify_section_' + key + ' icon-collection-save" rel="' + key + '" data-tooltip="left" title="Turn selected content into <br>' + displayTitle + ' section"> Identify ' + displayTitle + ' section</a>' +
                 '</li>');
         });
-        if (toolsToLoad !== 'syllabus') {
+        if (toolsToLoad === 'syllabus' || klToolsVariables.usePHP === false) {
+            templateContentBtns = '<a href="#" class="btn btn-mini kl_sections_btn kl_margin_bottom fa fa-magic"> Template Sections</a>';
+        } else {
             templateContentBtns = '<div class="btn-group">' +
                 '   <a href="#" class="btn btn-mini kl_sections_btn kl_margin_bottom fa fa-magic"> Template Sections</a>' +
                 '   <a href="#" class="btn btn-mini kl_existing_content_btn kl_margin_bottom fa fa-files-o"> Copy Existing</a>' +
                 '</div>';
-        } else {
-            templateContentBtns = '<a href="#" class="btn btn-mini kl_sections_btn kl_margin_bottom fa fa-magic"> Template Sections</a>';
         }
         $('.kl_template_content_btn').html(templateContentBtns);
         klSectionsReady(sectionArray);
@@ -1972,7 +1972,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             $('#' + connectedElement).show();
         });
         // Identify when TinyMCE node changes
-        tinyMCE.activeEditor.onNodeChange.add(function () {
+        tinyMCE.activeEditor.on('NodeChange', function () {
             klCurrentSpacing('margin');
             klCurrentSpacing('padding');
             klCurrentBorder();
@@ -2242,10 +2242,6 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
 
     ////// On Ready/Click functions  //////
     function klColorsReady() {
-        $('.defaultSkin table.mceLayout .mceStatusbar div').show();
-        $('.defaultSkin table.mceLayout .mceStatusbar div').closest('tr').addClass('kl_mce_path_wrapper');
-        $('#' + tinyMCE.activeEditor.id + '_path_voice').hide();
-        $('#' + tinyMCE.activeEditor.id + '_path_row span:nth-of-type(2)').hide();
         klInitializeElementColorPicker('#kl_selected_element_text_color', 'color');
         klInitializeElementColorPicker('#kl_selected_element_bg_color', 'background-color');
         klInitializeElementColorPicker('#kl_selected_element_border_color', 'border-color');
@@ -2256,7 +2252,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             tinyMCE.DOM.setStyle(tinymce.activeEditor.selection.getNode(), 'border-color', '');
             clearDataMCEStyle();
         });
-        tinyMCE.activeEditor.onNodeChange.add(function () {
+        tinyMCE.activeEditor.on('NodeChange', function () {
             klInitializeElementColorPicker('#kl_selected_element_text_color', 'color');
             klInitializeElementColorPicker('#kl_selected_element_bg_color', 'background-color');
             klInitializeElementColorPicker('#kl_selected_element_border_color', 'border-color');
@@ -4761,12 +4757,22 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
 
     function klAboutCustomTools() {
         var addAccordionSection = '<h3 class="kl_wiki" style="margin-top: 10px;">' +
-            '   About Custom Tools' +
+            '   About Design Tools' +
             '</h3>' +
             '<div class="kl_instructions">' +
             '   <p>This collection of tools is designed to assist in rapid course creation.</p>' +
             '   <p class="kl_margin_bottom">These tools were developed by USU&lsquo;s <a href="http://cidi.usu.edu/" target="_blank">Center for Innovative Design &amp; Instruction</a>.</p>' +
             '   <p><a href="https://usu.instructure.com/courses/305202" target="_blank">Learn more about these tools</a></p>' +
+            '</div>';
+        $('#kl_tools_accordion').append(addAccordionSection);
+    }
+    function klAboutSyllabusTools() {
+        var addAccordionSection = '<h3 class="kl_wiki" style="margin-top: 10px;">' +
+            '   About Syllabus Tools' +
+            '</h3>' +
+            '<div class="kl_instructions">' +
+            '   <p>Based on the <a href="http://salsa.usu.edu/" target="_blank"><img src="https://raw.githubusercontent.com/idbygeorge/salsa/master/public/img/salsa_icon.png" style="vertical-align: bottom; max-width: 25px;">Salsa</a> project developed at <a href="http://usu.edu" target="_blank">Utah State University</a>.</p>' +
+            '   <p style="margin-bottom:10px;"><a href="https://usu.instructure.com/courses/305202" target="_blank">Learn more about these tools</a></p>' +
             '</div>';
         $('#kl_tools_accordion').append(addAccordionSection);
     }
@@ -4800,7 +4806,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
 
     function klSyllabusReady() {
         // Insert notice about policies below the content editor
-        if ($('#kl_syllabus_policy_notice').length === 0) {
+        if ($('#kl_syllabus_policy_notice').length === 0 && (typeof klToolsVariables.usePHP === 'undefined' || klToolsVariables.usePHP)) {
             $('.form-actions').before('<div id="kl_syllabus_policy_notice" style="font-size:16px;">' +
                 '   <div class="btn-group">' +
                 '       <a href="#" class="btn btn-small kl_syllabus_policies_yes">Yes<span class="screenreader-only">, include policies and procedures</span></a>' +
@@ -5370,7 +5376,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
                     $('.kl_grade_scheme_walkthrough').unbind("click").click(function (e) {
                         e.preventDefault();
                         var defaulthref = $('.settings').attr('href'),
-                            newhref = defaulthref + '?task=setGradeScheme';
+                            newhref = defaulthref + '?task=setGradeScheme#tab-details';
                         $('.settings').attr({'data-tooltip': 'right', 'title': 'Click here!<br>We will open it in a new tab.', 'target': '_blank', 'href': newhref}).trigger('mouseover').focus();
                         $('.settings').click(function () {
                             $('.settings').attr({'data-tooltip': '', 'title': ''}).trigger('mouseout');
@@ -5731,7 +5737,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             '</div>',
             tabNavigation = '<ul>' +
             '   <li><a href="#canvas_tools" class="kl_tools_tab">Canvas Tools</a></li>' +
-            '   <li><a href="#kl_tools" id="toolsTrigger" class="kl_tools_tab">Custom Tools</a></li>' +
+            '   <li><a href="#kl_tools" id="toolsTrigger" class="kl_tools_tab">Design Tools</a></li>' +
             '</ul>',
             customAccordionDiv = '<div id="kl_tools_accordion" class="kl_margin_bottom" />';
 
@@ -5852,7 +5858,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
         klSyllabusTools();
         klSectionsTool(klToolsArrays.klSyllabusPrimarySections);
         klCustomTablesButton();
-        klAboutCustomTools();
+        klAboutSyllabusTools();
         // activate the accordion
         klInitializeToolsAccordion();
         // Load JavaScript file that will clean up old format
@@ -5889,7 +5895,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
         if ($('#editor_tabs').length > 0) {
             // Add button to trigger tools
             if ($('#kl_tools_accordion').length === 0) {
-                $('#right-side').prepend('<a href="#" class="btn btn-primary kl_add_tools"><i class="fa fa-rocket" style="font-size: 18px;"></i> Launch Custom Tools</a>');
+                $('#right-side').prepend('<a href="#" class="btn btn-primary kl_add_tools"><i class="fa fa-rocket" style="font-size: 18px;"></i> Launch Design Tools</a>');
                 // Decide which tools to load
                 toolsToLoad = 'wiki';
                 if (document.URL.indexOf('/syllabus') > -1) {
