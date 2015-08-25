@@ -6,13 +6,13 @@ $('label[for="build_pseudonym_for_email"]').hide();
 
 $('div[id="login_form"]').html('<a class="button" style="font-size: 1.3em;" href="/login">uNID Log in at The University of Utah</a><p></p><a class="button" style="font-size: 1.3em;" href="/login?canvas_login=1">Guest (non uNID) Log in</a>');
 
-// [purpose: "script to modify filmstrip icon of old version of Kaltura tool", effective_date: "August-29, 2014", modifier: "Jihoon Yoo"]
-function setKalturaIcon() {
-    console.log(new Date() + ": finding Kaltura old icon ... " +  $('span.mceIcon.mce_instructure_record').length);
-    $('span.mceIcon.mce_instructure_record').html('<img class="mceIcon" src="https://utah.test.instructure.com/images/webcam.png" alt="Record/Upload Media">');
-}    
-setTimeout(function(){ setKalturaIcon() }, 1300);
-         
+// [purpose: "to modify filmstrip icon of old version of Kaltura tool", modified_date: "August-10, 2014", modifier: "Jihoon Yoo"]
+setTimeout(function(){
+    $('div[aria-label="Media Gallery"] > button > i').removeClass("icon-video");
+    $('div[aria-label="Embed Kaltura Media"] > button > i').removeClass("icon-video");
+    $('div[aria-label="Record/Upload Media"] > button > i').removeClass("icon-video").css('background-image', 'url("/images/webcam.png")');
+}, 500);
+
 var is_updated = false;
 $(document).click(function() {
     if ($('#create-users-step-1') != null) {

@@ -199,6 +199,13 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
                 clearTimeout(timeoutID);
             });
         });
+        // Add toggle button to top of tools wrapper
+        if ($('.kl_tools_hide').length === 0) {
+            $('#kl_tools_wrapper').prepend('<button class="kl_tools_hide btn btn-mini">Hide Design Tools <i class="icon-arrow-open-right"></i></button>');
+            $('.kl_tools_hide').unbind('click').click(function () {
+                $('#kl_tools_wrapper').toggle('slide');
+            });
+        }
     }
     // and is the first item on the page. Also replaces old css code
     function klCustomCSSCheck() {
@@ -343,6 +350,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
                     $(iframeID).contents().find(targetElement).css('color', textColor);
                 }
                 $(iframeID).contents().find(targetElement).removeAttr('data-mce-style');
+                clearDataMCEStyle();
             }
         });
     }
@@ -966,7 +974,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
         // Duplicate Canvas list
         $('.kl_existing_content_btn').unbind("click").click(function (e) {
             e.preventDefault();
-            klCheckPageTemplates();
+            klListPages();
             $('#kl_import_content_box').dialog({ position: { my: 'right top', at: 'left top', of: '#kl_tools' }, modal: false, width: 265 });
         });
     }
@@ -1012,8 +1020,6 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
             '    <div id="kl_import_content_box" style="display:none;" title="Import Content from Page">' +
             '       <div id="kl_course_template_pages"></div>' +
             '       <div id="kl_existing_pages"></div>' +
-            '       <label for="kl_page_url">Copy page content by url</label for="kl_page_url">' +
-            '       <form class="form-inline input-append"><input id="kl_page_url" type="text" placeholder="Canvas page url" style="width:180px;"><a href="#" id="kl_get_existing" class="btn add-on" data-tooltip="top" title="Copy page contents by url"><i class="fa fa-files-o"></i><span class="screenreader-only">Get existing</span></a></form>' +
             '    </div>' +
             '</div>';
         $('#kl_tools_accordion').append(addAccordionSection);
@@ -1275,7 +1281,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
     function klGetTabPanels() {
         $('#kl_tab_panels').html('');
         if ($(iframeID).contents().find('.kl_tabbed_section').length > 0) {
-            $(iframeID).contents().find('.kl_tabbed_section h4').each(function (i) {
+            $(iframeID).contents().find('.kl_tabbed_section > h4').each(function (i) {
                 var identifyCurrent, panelTitle, sortableImage;
                 if ($(this).hasClass('kl_current_tab')) {
                     $(this).attr('class', 'kl_tab_' + i + ' kl_current_tab');
@@ -1294,7 +1300,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
                     '    <span class="screenreader-only">Delete Tab Panel</span>' +
                     '</a></li>');
             });
-            $(iframeID).contents().find('.kl_tabbed_section div').each(function (i) {
+            $(iframeID).contents().find('.kl_tabbed_section > div').each(function (i) {
                 if ($(this).hasClass('kl_current_tab')) {
                     $(this).attr('class', 'kl_tab_content kl_tab_' + i + ' kl_current_tab');
                 } else {
@@ -1555,6 +1561,7 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
         // Clean up extra spaces and add to parent
         newStyle = newStyle.trim();
         tinyMCE.DOM.setAttrib(parentList, 'style', newStyle);
+        $(parentList).removeAttr('data-mce-style');
     }
 
     ////// On Ready/Click functions  //////
@@ -4786,10 +4793,13 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
     // Control whether or not to add policies on save
     function klInsertPolicies() {
         var policies = 'Policies need to be updated in the tools template course.';
-        $.post(klApiToolsPath + 'getPage.php', { courseID: klToolsVariables.klToolTemplatesCourseID, pageUrl: 'policies-and-procedures' })
-            .done(function (data) {
-                policies = data;
+        $.getJSON("https://" + location.host + "/api/v1/courses/" + klToolsVariables.klToolTemplatesCourseID + "/pages/policies-and-procedures", function (data) {
+            $.each(data, function (key, val) {
+                if (key === 'body') {
+                    policies = val;
+                }
             });
+        });
         $('#edit_course_syllabus_form .btn-primary').click(function () {
             if ($('.kl_syllabus_policies_yes').hasClass('active')) {
                 $(iframeID).contents().find('.universityPolicies').remove();
@@ -5614,61 +5624,77 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
 /////////////////////////////////////////////////////////////
 //  API FUNCTIONS                                          //
 ///////////////////////////////////////////////////////////// 
-
-    function klImportPageContentThisCourse() {
-        $('.kl_existing_page_links a').unbind("click").click(function (e) {
-            e.preventDefault();
-            var linkHref, contentUrl;
-            // Clear quick check
-            $('.kl_quick_check_remove').trigger('click');
-            // Gather ne data
-            $(this).parents('li').addClass('kl_loading').prepend('<i class="fa fa-spinner fa-spin"></i>');
-            linkHref = $(this).attr('href').split('/pages/');
-            contentUrl = linkHref[1];
-            $.post(klApiToolsPath + 'getPage.php', { courseID: coursenum, pageUrl: contentUrl })
-                .done(function (data) {
-                    $(iframeID).contents().find('body').html(data);
-                    $('.kl_loading i').remove();
-                    $('.kl_loading').removeClass('kl_loading');
-                    sectionsPanelDefault = true;
-                    klSetupMainTools();
+    function klCopyPageFound(pageStatus) {
+        if (pageStatus) {
+            $('.kl_copy_status').removeClass('alert-info').addClass('alert-success').html('<i class="fa fa-check"></i> Copy Complete');
+            // klTools.rebuild();
+            sectionsPanelDefault = true;
+            klSetupMainTools();
+        } else {
+            $('.kl_copy_status').removeClass('alert-info').addClass('alert-danger').html('<i class="fa fa-exclamation-triangle"></i> Page not found');
+        }
+        setTimeout(function () {
+            $('.kl_copy_status').slideUp();
+            setTimeout(function () {
+                $('.kl_copy_status').remove();
+            }, 300);
+        }, 1000);
+    }
+    function klCopyPage(page_url, course) {
+        if (page_url !== '') {
+            $('#kl_existing_pages').append('<div class="alert alert-info kl_copy_status"><i class="fa fa-spinner fa-pulse"></i> Retrieving Content</div>');
+            $.getJSON("https://" + location.host + "/api/v1/courses/" + course + "/pages/" + page_url, function (data) {
+                $.each(data, function (key, val) {
+                    if (key === 'body') {
+                        $(iframeID).contents().find('body').html(val);
+                        klCopyPageFound(true);
+                        return;
+                    }
                 });
+            }).fail(function (jqXHR) {
+                if (jqXHR.status === 404) {
+                    klCopyPageFound(false);
+                }
+            });
+        }
+    }
+    function klResetCopySelects(selectID) {
+        $('.kl_existing_select').each(function () {
+            if ($(this).attr('id') !== selectID) {
+                $(this).find('option:first').attr('selected', true);
+            }
         });
     }
-    function klCheckPageTemplates() {
-        $('#kl_course_template_pages').html('<i class="fa fa-spinner fa-spin"></i> Checking for template pages');
-        $.post(klApiToolsPath + 'checkTemplates.php', { courseID: coursenum })
-            .done(function (data) {
-                $('#kl_course_template_pages').html(data);
-                $('#inputUnpublished').focus();
-                $('.kl_copy_page').unbind('change').on('change', function (e) {
-                    var myValue = this.value;
-                    $('#kl_course_template_pages').prepend('<div id="kl_getting_content" class="alert alert-info"><i class="fa fa-spinner fa-spin"></i> Retrieving Content</div>');
-                    $.post(klApiToolsPath + 'getPage.php', { courseID: coursenum, pageUrl: myValue })
-                        .done(function (data) {
-                            $(iframeID).contents().find('body').html(data);
-                            $('#kl_getting_content').remove();
-                            $('.kl_import_primary_template i').attr('class', 'fa fa-clipboard');
-                            sectionsPanelDefault = true;
-                            klSetupMainTools();
-                        });
+    function klCreateCopySelect(itemArray, selectID, course, label) {
+        try {
+            var selectHTML = '<label for="#' + selectID + '">' + label + '</label>' +
+                '<select id="' + selectID + '" class="kl_existing_select"><option value="">Select a page</option></select>';
+            // All Pages
+            if (itemArray.length > 0) {
+                $('#kl_existing_pages').append(selectHTML);
+                $.each(itemArray, function (key, val) {
+                    $('#' + selectID).append(val);
                 });
-            });
+                $('#' + selectID).change(function () {
+                    klCopyPage($('#' + selectID + ' option:selected').val(), course);
+                    klResetCopySelects(selectID);
+                });
+            }
+        } catch (err) {
+            alert(err);
+        }
     }
-    function klImportPageContentUrl() {
-        var pastedUrl, sourceCourseNum, pageTitleUrl;
-        // Clear quick check
-        $('.kl_quick_check_remove').trigger('click');
-        // Gather ne data
-        $('#kl_get_existing i').attr('class', 'fa fa-spinner fa-spin');
-        pastedUrl = $('#kl_page_url').val();
-        sourceCourseNum = pastedUrl.split('/courses/');
+    function klImportPageUrl(url) {
+        var sourceCourseNum, pageTitleUrl;
+        // Get source course ID
+        sourceCourseNum = url.split('/courses/');
         sourceCourseNum = sourceCourseNum[1].split('/');
         sourceCourseNum = sourceCourseNum[0];
-        if (pastedUrl.indexOf('/wiki/') > -1) {
-            pageTitleUrl = pastedUrl.split('/wiki/');
-        } else if (pastedUrl.indexOf('/pages/') > -1) {
-            pageTitleUrl = pastedUrl.split('/pages/');
+        // Get content page url
+        if (url.indexOf('/wiki/') > -1) {
+            pageTitleUrl = url.split('/wiki/');
+        } else if (url.indexOf('/pages/') > -1) {
+            pageTitleUrl = url.split('/pages/');
         }
         if (pageTitleUrl[1].indexOf('/') > -1) {
             pageTitleUrl = pageTitleUrl[1].split('/');
@@ -5676,30 +5702,58 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
         } else {
             pageTitleUrl = pageTitleUrl[1];
         }
-        $.post(klApiToolsPath + 'getPage.php', { courseID: sourceCourseNum, pageUrl: pageTitleUrl })
-            .done(function (data) {
-                var re = new RegExp(sourceCourseNum, 'g');
-                data = data.replace(re, coursenum);
-                $(iframeID).contents().find('body').html(data);
-                $('#kl_get_existing i').attr('class', 'fa fa-files-o');
-                sectionsPanelDefault = true;
-                klSetupMainTools();
-            });
+        // Copy Content
+        klCopyPage(pageTitleUrl, sourceCourseNum);
+        $('#kl_page_url').val('');
     }
-    function klBindAPIImportsTriggers() {
+    function klCopyPastedURL() {
+        var inputHTML = '<label for="kl_page_url">Copy Page Content by URL</label for="kl_page_url">' +
+            '<div class="form-inline input-append">' +
+            '<input id="kl_page_url" type="text" placeholder="Canvas page URL" style="width:170px;">' +
+            '<a href="#" id="kl_get_existing" class="btn add-on" data-tooltip="top" title="Retrieve page"><i class="fa fa-files-o"></i></a>' +
+            '</div>';
+        $('#kl_existing_pages').append(inputHTML);
         // Pasted url
         $('#kl_page_url').keydown(function (event) {
+            var url = $(this).val();
             if (event.keyCode === 13) {
                 event.preventDefault();
-                klImportPageContentUrl();
+                klImportPageUrl(url);
                 return false;
             }
         });
         $('#kl_get_existing').unbind("click").click(function (e) {
             e.preventDefault();
-            klImportPageContentUrl();
+            var url = $('#kl_page_url').val();
+            klImportPageUrl(url);
         });
     }
+    function klListPages() {
+            $.getJSON("https://" + location.host + "/api/v1/courses/" + coursenum + "/pages?per_page=50", function (data) {
+        try {
+                var items = [],
+                    published = [],
+                    unpublished = [];
+                $.each(data, function (key, val) {
+                    var pageName = val.title,
+                        pageURL = val.url;
+                    items.push('<option value="' + pageURL + '">' + pageName + '</option>');
+                    if (val.published) {
+                        published.push('<option value="' + pageURL + '">' + pageName + '</option>');
+                    } else if (!val.published) {
+                        unpublished.push('<option value="' + pageURL + '">' + pageName + '</option>');
+                    }
+                });
+                klCreateCopySelect(items, 'kl_page_select', coursenum, 'All Pages');
+                klCreateCopySelect(published, 'kl_page_select_published', coursenum, 'Published Pages');
+                klCreateCopySelect(unpublished, 'kl_page_select_unpublished', coursenum, 'Unpublished Pages');
+                klCopyPastedURL();
+        } catch (err) {
+            alert(err);
+        }
+            });
+    }
+
 
 /////////////////////////////////////////////////////////////
 //  SETUP FUNCTIONS                                        //
@@ -5730,19 +5784,9 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
 
             // Create tabs for Canvas Tools and USU Tools
         if ($('#kl_tools_wrapper').length === 0) {
-            // Wrap existing Canvas Page Tools
-            if ($('#editor_tabs').length > 0) {
-                $('#editor_tabs').wrap('<div id="kl_tools_wrapper" class="tabs" />').wrap('<div id="canvas_tools" />');
-            }
-
-            $('#kl_tools_wrapper').append('<div id="kl_tools" />').prepend(tabNavigation);
-            $('#kl_tools_wrapper').tabs({active: 1});
+            $('#application').append('<div id="kl_tools_wrapper"><div id="kl_tools"></div></div>');
         }
         $('#kl_tools').html(visualBlocksButtons + customAccordionDiv + klCleanUpButtons);
-        $('#toolsTrigger').click(function (e) {
-            e.preventDefault();
-            $('a:contains("HTML Editor")').get(0).scrollIntoView();
-        });
         klBindHover();
     }
     // Create an accordion in right panel after tools are added
@@ -5827,11 +5871,10 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
         // Load JavaScript file that will clean up old format
         klCleanUp();
         klBindHover();
-        $('.kl_add_tools').remove();
+        $('.kl_add_tools').html('<i class="fa fa-rocket" style="font-size: 18px;"></i> Toggle Design Tools').addClass('btn-mini');
+        $('.kl_add_tools i').css('font-size', '');
 
-        klImportPageContentThisCourse();
         setTimeout(function () {
-            klBindAPIImportsTriggers();
             // Load additional content from canvasGlobal.js if needed
             klAfterToolLaunch();
         }, 300);
@@ -5851,7 +5894,8 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
         klDelayedLoad();
         klCleanUp();
         klBindHover();
-        $('.kl_add_tools').remove();
+        $('.kl_add_tools').html('<i class="fa fa-rocket" style="font-size: 18px;"></i> Toggle Design Tools').addClass('btn-mini');
+        $('.kl_add_tools i').css('font-size', '');
     }
     // Check for TinyMCE editor and Load Tools
     function klEditorExistenceCheck(toolsToLoad) {
@@ -5893,10 +5937,15 @@ klToolsArrays, vendor_legacy_normal_contrast, klAfterToolLaunch, klAdditionalAcc
                 }
                 $('.kl_add_tools').unbind("click").click(function (e) {
                     e.preventDefault();
-                    klEditorExistenceCheck(toolsToLoad);
-                    $('head').append($('<link/>', { rel: 'stylesheet', href: klToolsPath + 'css/tools_interface.css', type: 'text/css' }));
+                    var timestamp =  +(new Date());
+                    if ($('#kl_tools').length === 0) {
+                        klEditorExistenceCheck(toolsToLoad);
+                        $('head').append($('<link/>', { rel: 'stylesheet', href: klToolsPath + 'css/tools_interface.css?' + timestamp, type: 'text/css' }));
+                        $(this).html('<i class="fa fa-spin fa-spinner"></i> Loading Tools');
+                    } else {
+                        $('#kl_tools_wrapper').toggle('slide');
+                    }
 
-                    $(this).html('<i class="fa fa-spin fa-spinner"></i> Loading Tools');
                 });
             }
         }
